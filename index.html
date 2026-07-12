@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#062f1e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="BL Suínos Manager">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<link rel="icon" sizes="192x192" href="icon-192.png">
+<title>BL Suínos Manager</title>
+<style>
+:root{--bg:#f6f7f4;--card:#fff;--text:#172018;--muted:#707971;--line:#e5e9e4;--green:#2f8f2f;--deep:#073522;--soft:#f1f6ef;--gold:#d8b042;--red:#d93b32;--shadow:0 7px 24px rgba(20,55,32,.08)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text)}button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:50;color:#fff;background:linear-gradient(145deg,#052b1b,#063d25 64%,#0a4d2d);padding:calc(13px + env(safe-area-inset-top,0px)) 16px 0;box-shadow:0 5px 20px rgba(0,39,22,.18)}
+.brand-logo{width:54px;height:54px;object-fit:contain;flex:0 0 54px}.setup-logo{display:block;width:126px;height:126px;object-fit:contain;margin:0 auto 14px;border-radius:28px}.brand-row{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:11px}.brand{display:flex;align-items:center;gap:10px}.brand-mark{width:43px;height:43px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#e6c965,#c69c22);color:#073522;font-weight:950;font-size:21px}.brand-copy h1{font-size:17px;line-height:1;margin:0;letter-spacing:.7px}.brand-copy p{font-size:9px;letter-spacing:4px;margin:4px 0 0;color:#e4d799}.bell{border:0;background:transparent;color:#fff;font-size:22px}
+.tabs{max-width:1180px;margin:auto;display:flex;gap:4px;overflow:auto;padding:0 0 4px}.tabs button{min-width:62px;padding:8px 6px 9px;border:0;border-bottom:3px solid transparent;background:transparent;color:#fff;font-size:9.5px;white-space:nowrap;opacity:.88}.tabs button span{display:block;font-size:20px}.tabs button.active{color:#80cf2b;border-color:#80cf2b;opacity:1}
+main{max-width:1180px;margin:auto;padding:14px 14px calc(88px + env(safe-area-inset-bottom,0px))}.view{display:none}.view.active{display:block}.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:4px 1px 14px}.page-head h2{margin:0;font-size:21px}.page-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.date-chip{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px;font-size:11px;color:var(--muted);white-space:nowrap}
+.grid{display:grid;gap:10px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}@media(min-width:760px){.kpis{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:repeat(2,1fr)}}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px;box-shadow:var(--shadow)}.kpi{text-align:center;min-height:133px;display:flex;flex-direction:column;align-items:center;justify-content:center}.kpi small{font-size:10px;font-weight:750}.kicon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:22px;margin:10px 0 4px;background:var(--soft)}.kpi strong{font-size:21px;color:#1b6d2b}.kpi a{margin-top:6px;font-size:9px;color:#27803b}.muted{color:var(--muted);font-size:11px}.positive{color:#1a8b42!important}.negative{color:var(--red)!important}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:12px 2px 7px}.section-title h3{margin:0;font-size:12px}.section-title button{border:0;background:none;color:#24813a;font-size:9px}.activity-row,.alert-row{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:10px}.activity-row:last-child,.alert-row:last-child{border:0}.activity-row small,.alert-row small{display:block;color:var(--muted);margin-top:2px}.dot{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;border:1px solid currentColor}.empty{text-align:center;color:var(--muted);padding:30px 12px}.empty-icon{font-size:42px;opacity:.18;margin-bottom:8px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}.section-head h2,.section-head h3{margin:0}.btn{border:0;border-radius:8px;padding:10px 12px;font-weight:800}.primary{background:linear-gradient(90deg,#32972f,#257f28);color:#fff}.soft{background:var(--soft);color:#256f34}.gold{background:var(--gold);color:#2e260a}.danger{background:#fee9e7;color:#ba2e28}.small{padding:7px 9px;font-size:10px}.actions{display:flex;gap:6px;flex-wrap:wrap}
+form{display:grid;gap:9px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:12px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:10px}th,td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--muted)}.badge{display:inline-flex;padding:3px 7px;border-radius:999px;background:#e9f4e7;color:#247735;font-size:9px;font-weight:800}.badge.red{background:#fee8e6;color:#b72d27}
+.subtabs{display:flex;gap:8px;overflow:auto;border-bottom:1px solid var(--line);margin-bottom:13px}.subtabs button{border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);padding:8px 5px;font-size:10px;white-space:nowrap}.subtabs button.active{color:#2c8a35;border-color:#2c8a35;font-weight:800}.hidden{display:none!important}.progress{height:7px;background:#e8ece8;border-radius:20px;overflow:hidden}.progress span{display:block;height:100%;background:#3c9d3d}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.56);display:none;align-items:flex-end}.modal.open{display:flex}.modal-box{width:min(680px,100%);max-height:91vh;overflow:auto;margin:auto auto 0;background:#fff;border-radius:18px 18px 0 0;padding:17px 17px calc(17px + env(safe-area-inset-bottom,0px))}
+.setup{position:fixed;inset:0;z-index:200;background:linear-gradient(145deg,#062c1b,#0c5b34);display:none;overflow:auto;padding:calc(25px + env(safe-area-inset-top,0px)) 15px;color:#fff}.setup.open{display:block}.setup-box{max-width:600px;margin:auto}.setup .card{color:var(--text)}
+.fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:72;width:58px;height:58px;border-radius:50%;border:2px solid #b6d798;background:linear-gradient(145deg,#4ca534,#247d2a);color:#fff;font-size:34px;display:grid;place-items:center;box-shadow:0 10px 25px rgba(25,90,36,.34)}.fab.open{transform:rotate(45deg)}.fab-backdrop{position:fixed;inset:0;z-index:69;background:rgba(0,0,0,.24);display:none}.fab-backdrop.open{display:block}.quick-menu{position:fixed;right:15px;bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:70;background:rgba(29,32,29,.96);border:1px solid #666;border-radius:18px;padding:11px;width:min(285px,calc(100vw - 30px));display:none;box-shadow:0 18px 45px rgba(0,0,0,.4)}.quick-menu.open{display:block}.quick-menu h3{color:#fff;font-size:12px;margin:2px 4px 9px}.quick-action{width:100%;border:0;border-radius:9px;background:#3b3d3b;color:#fff;padding:10px;display:flex;gap:10px;align-items:center;text-align:left;margin:6px 0}.qa-icon{width:32px;height:32px;border-radius:8px;background:#173b22;color:#83cc2b;display:grid;place-items:center}.quick-action b{font-size:11px}.quick-action small{display:block;color:#c3c7c3;font-size:9px;margin-top:2px}
+.ai-shell{background:linear-gradient(165deg,#062c1b,#063d25);color:#fff;border-radius:13px;padding:15px}.voice{width:82px;height:82px;border-radius:50%;border:4px solid rgba(122,204,44,.3);background:radial-gradient(circle,#218a45,#073d25);color:#fff;font-size:36px;display:grid;place-items:center;margin:18px auto}.voice.listening{animation:pulse 1s infinite}@keyframes pulse{50%{transform:scale(1.05);box-shadow:0 0 0 15px rgba(104,190,40,.12)}}.chat{height:42vh;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:5px}.msg{max-width:88%;padding:10px 11px;border-radius:11px;font-size:11px;white-space:pre-wrap}.msg.user{align-self:flex-end;background:#2f8f2f}.msg.bot{align-self:flex-start;background:#163e28}
+.settings-list{background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px;border-bottom:1px solid var(--line);font-size:11px}.setting-row:last-child{border:0}.setting-row .left{display:flex;gap:10px;align-items:center}.setting-icon{width:29px;height:29px;border-radius:8px;background:#eef6eb;display:grid;place-items:center;color:#288038}
+</style>
+</head>
+<body>
+<header>
+<div class="brand-row"><div class="brand"><img class="brand-logo" src="logo-bl-suinos.png" alt="BL Suínos Manager"><div class="brand-copy"><h1>BL SUÍNOS</h1><p>MANAGER</p></div></div><button class="bell">♧</button></div>
+<nav class="tabs">
+<button class="active" data-view="dashboard"><span>⌂</span>Dashboard</button>
+<button data-view="pigs"><span>🐷</span>Lotes</button>
+<button data-view="weights"><span>⚖</span>Pesagens</button>
+<button data-view="nutrition"><span>🥣</span>Nutrição</button>
+<button data-view="stock"><span>▣</span>Estoque</button>
+<button data-view="finance"><span>💲</span>Financeiro</button>
+<button data-view="more"><span>•••</span>Mais</button>
+</nav>
+</header>
+<main>
+<section id="dashboard" class="view active">
+<div class="page-head"><div><h2 id="hello">Bom dia!</h2><p>Aqui está o resumo da sua granja hoje.</p></div><div id="dateChip" class="date-chip">📅 Hoje</div></div>
+<div class="grid kpis">
+<div class="card kpi"><small>Suínos ativos</small><span class="kicon">🐷</span><strong id="dashPigs">0</strong><span class="muted">cabeças</span><a onclick="go('pigs')">Ver detalhes</a></div>
+<div class="card kpi"><small>Peso médio</small><span class="kicon">⚖</span><strong id="dashAvgWeight">0 kg</strong><span class="muted">peso atual</span><a onclick="go('weights')">Ver pesagens</a></div>
+<div class="card kpi"><small>Ganho médio diário</small><span class="kicon">📈</span><strong id="dashGmd">0 g</strong><span class="muted">g/dia</span><a onclick="go('reports')">Ver indicador</a></div>
+<div class="card kpi"><small>Consumo de ração</small><span class="kicon">🥣</span><strong id="dashFeedUsed">0 kg</strong><span class="muted">registrado</span><a onclick="go('nutrition')">Ver nutrição</a></div>
+<div class="card kpi"><small>Conversão alimentar</small><span class="kicon">◷</span><strong id="dashFcr">0,00</strong><span class="muted">kg/kg</span><a onclick="go('reports')">Ver detalhes</a></div>
+<div class="card kpi"><small>Custo por kg</small><span class="kicon">💲</span><strong id="dashCostKg">R$ 0,00</strong><span class="muted">produzido</span><a onclick="go('finance')">Ver custos</a></div>
+<div class="card kpi"><small>Lucro estimado</small><span class="kicon">💰</span><strong id="dashProfit">R$ 0,00</strong><span class="muted">resultado atual</span><a onclick="go('finance')">Ver financeiro</a></div>
+<div class="card kpi"><small>Previsão de venda</small><span class="kicon">📅</span><strong id="dashSaleDate">—</strong><span class="muted">próxima</span><a onclick="go('pigs')">Ver lotes</a></div>
+</div>
+<div class="grid two">
+<div><div class="section-title"><h3>Próximas atividades</h3><button onclick="go('agenda')">Ver agenda ›</button></div><div class="card" id="todayList"></div></div>
+<div><div class="section-title"><h3>Alertas importantes</h3><button onclick="go('stock')">Ver todos ›</button></div><div class="card" id="alertList"></div></div>
+</div>
+<div class="grid two">
+<div><div class="section-title"><h3>Estoque crítico</h3><button onclick="go('stock')">Ver estoque ›</button></div><div class="card" id="criticalStock"></div></div>
+<div><div class="section-title"><h3>Evolução do peso médio</h3><button onclick="go('weights')">Ver pesagens ›</button></div><div class="card" id="weightEvolution"></div></div>
+</div>
+</section>
+
+<section id="pigs" class="view">
+<div class="section-head"><div><h2>Lotes</h2><div class="muted">Controle completo dos lotes da granja.</div></div><button class="btn primary" onclick="openModal('pig')">+ Novo lote</button></div>
+<div class="subtabs"><button class="active">Ativos</button><button>Finalizados</button><button>Todos</button></div>
+<div id="pigCards" class="grid two"></div>
+</section>
+
+<section id="weights" class="view">
+<div class="section-head"><div><h2>Pesagens</h2><div class="muted">Evolução do peso e ganho médio diário.</div></div><button class="btn primary" onclick="openWeightModal()">+ Nova pesagem</button></div>
+<div class="card"><canvas id="weightChart" width="800" height="260" style="width:100%;height:220px"></canvas></div>
+<div class="card" style="margin-top:10px"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Lote</th><th>Peso médio</th><th>GMD</th><th></th></tr></thead><tbody id="weightRows"></tbody></table></div></div>
+</section>
+
+<section id="birds" class="view hidden"><div class="section-head"><h2>Avicultura</h2><button class="btn primary" onclick="openModal('bird')">+ Novo lote</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Lote</th><th>Tipo</th><th>Ativas</th><th>Mortalidade</th></tr></thead><tbody id="birdRows"></tbody></table></div></div></section>
+<section id="crops" class="view hidden"><div class="section-head"><h2>Agricultura</h2><button class="btn primary" onclick="openModal('crop')">+ Nova cultura</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Cultura</th><th>Área</th><th>Plantio</th><th>Colheita</th><th>Custo</th></tr></thead><tbody id="cropRows"></tbody></table></div></div></section>
+
+<section id="nutrition" class="view"><div class="section-head"><div><h2>Nutrição</h2><div class="muted">Ingredientes ilimitados, receitas por fase, produção e custo da ração.</div></div></div><div class="subtabs"><button class="active" data-sub="ingredients">Ingredientes</button><button data-sub="recipes">Receitas</button><button data-sub="produce">Produzir Ração</button><button data-sub="readyFeed">Ração Pronta</button></div>
+<div id="ingredients" class="subview"><div class="section-head"><h3>Ingredientes</h3><button class="btn primary" onclick="openModal('ingredient')">+ Novo ingrediente</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Ingrediente</th><th>Saldo</th><th>Custo</th><th>Mínimo</th><th>Ações</th></tr></thead><tbody id="ingredientRows"></tbody></table></div></div></div>
+<div id="recipes" class="subview hidden"><div class="section-head"><h3>Receitas</h3><button class="btn primary" onclick="openRecipeModal()">+ Nova receita</button></div><div id="recipeCards" class="grid two"></div></div>
+<div id="produce" class="subview hidden"><div class="card"><h3>Produzir Ração</h3><form id="produceForm"><select id="recipeSelect" required></select><div class="row"><input id="produceQty" type="number" step=".01" placeholder="Quantidade em kg" required><input id="produceDate" type="date" required></div><div id="producePreview"></div><button class="btn primary">Continuar</button></form></div></div>
+<div id="readyFeed" class="subview hidden"><div class="card"><div class="table-wrap"><table><thead><tr><th>Ração</th><th>Quantidade</th><th>Custo/kg</th><th>Valor</th></tr></thead><tbody id="readyRows"></tbody></table></div></div></div>
+</section>
+
+<section id="stock" class="view"><div class="section-head"><div><h2>Estoque</h2><div class="muted">Ingredientes, ração pronta e outros itens.</div></div><button class="btn primary" onclick="openModal('stock')">+ Novo item</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Item</th><th>Categoria</th><th>Saldo</th><th>Mínimo</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="stockRows"></tbody></table></div></div></section>
+
+<section id="finance" class="view"><div class="section-head"><div><h2>Financeiro</h2><div class="muted">Receitas, despesas e lucro.</div></div><button class="btn primary" onclick="openModal('finance')">+ Nova movimentação</button></div><div class="grid kpis"><div class="card kpi"><small>Receitas</small><span class="kicon">↗</span><strong id="finRevenue">R$ 0,00</strong></div><div class="card kpi"><small>Despesas</small><span class="kicon">↘</span><strong id="finExpense">R$ 0,00</strong></div><div class="card kpi"><small>Lucro</small><span class="kicon">💲</span><strong id="finProfit">R$ 0,00</strong></div><div class="card kpi"><small>Margem</small><span class="kicon">%</span><strong id="finMargin">0%</strong></div></div><div class="card" style="margin-top:10px"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Atividade</th><th>Valor</th></tr></thead><tbody id="financeRows"></tbody></table></div></div></section>
+
+<section id="agenda" class="view"><div class="section-head"><h2>Agenda</h2><button class="btn primary" onclick="openModal('agenda')">+ Nova atividade</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Status</th></tr></thead><tbody id="agendaRows"></tbody></table></div></div></section>
+<section id="reports" class="view"><div class="section-head"><h2>Relatórios</h2></div><div class="settings-list"><div class="setting-row"><div class="left"><span class="setting-icon">▥</span><div><b>Desempenho dos Lotes</b><div class="muted">Pesos e evolução</div></div></div><span>›</span></div><div class="setting-row"><div class="left"><span class="setting-icon">🥣</span><div><b>Consumo de Ração</b><div class="muted">Consumo por período</div></div></div><span>›</span></div><div class="setting-row"><div class="left"><span class="setting-icon">💲</span><div><b>Financeiro</b><div class="muted">Receitas e despesas</div></div></div><span>›</span></div><div class="setting-row"><div class="left"><span class="setting-icon">▣</span><div><b>Estoque</b><div class="muted">Movimentação e situação</div></div></div><span>›</span></div></div></section>
+
+<section id="ai" class="view"><div class="ai-shell"><h2 style="text-align:center;margin:0">BL IA</h2><p style="text-align:center;font-size:12px">Olá, <span id="aiName">produtor</span>! Como posso ajudar?</p><button id="voiceBtn" class="voice" onclick="startVoice()">🎤</button><div id="voiceStatus" style="text-align:center;font-size:10px">Toque para falar</div><div id="chat" class="chat"></div><div class="row"><input id="question" placeholder="Digite sua pergunta"><button class="btn primary" onclick="ask()">Enviar</button></div></div></section>
+
+<section id="more" class="view">
+<div class="section-head"><h2>Mais</h2></div>
+<div class="settings-list">
+<div class="setting-row" onclick="openSettings()"><div class="left"><span class="setting-icon">⌂</span><div><b>Minha Granja</b><div class="muted">Dados da propriedade e preço da arroba</div></div></div><span>›</span></div>
+<div class="setting-row" onclick="go('agenda')"><div class="left"><span class="setting-icon">💉</span><div><b>Sanidade e Agenda</b><div class="muted">Vacinas, medicamentos e manejos</div></div></div><span>›</span></div>
+<div class="setting-row" onclick="go('reports')"><div class="left"><span class="setting-icon">▥</span><div><b>Relatórios</b><div class="muted">GMD, conversão, custos e lucro</div></div></div><span>›</span></div>
+<div class="setting-row" onclick="go('ai')"><div class="left"><span class="setting-icon">◌</span><div><b>BL IA</b><div class="muted">ChatGPT, texto e comando por voz</div></div></div><span>›</span></div>
+<div class="setting-row" onclick="exportBackup()"><div class="left"><span class="setting-icon">☁</span><div><b>Backup</b><div class="muted">Exporte uma cópia dos dados</div></div></div><span>›</span></div>
+<div class="setting-row" onclick="go('finance')"><div class="left"><span class="setting-icon">💲</span><div><b>Financeiro</b><div class="muted">Receitas, despesas e lucratividade</div></div></div><span>›</span></div>
+</div>
+</section>
+</main>
+
+<div id="fabBackdrop" class="fab-backdrop" onclick="toggleFab(false)"></div>
+<div id="quickMenu" class="quick-menu"><h3>AÇÕES RÁPIDAS</h3>
+<button class="quick-action" onclick="toggleFab(false);openModal('pig')"><span class="qa-icon">🐷</span><span><b>Novo Lote</b><small>Cadastre um lote de suínos</small></span></button>
+<button class="quick-action" onclick="toggleFab(false);openWeightModal()"><span class="qa-icon">⚖</span><span><b>Nova Pesagem</b><small>Atualize o peso médio do lote</small></span></button>
+<button class="quick-action" onclick="toggleFab(false);openModal('ingredient')"><span class="qa-icon">🌽</span><span><b>Novo Ingrediente</b><small>Cadastre um ingrediente para ração</small></span></button>
+<button class="quick-action" onclick="quickMove()"><span class="qa-icon">▣</span><span><b>Movimentar Estoque</b><small>Entrada ou saída de produtos</small></span></button>
+<button class="quick-action" onclick="goProduce()"><span class="qa-icon">🥣</span><span><b>Produzir Ração</b><small>Fabrique uma receita cadastrada</small></span></button>
+<button class="quick-action" onclick="toggleFab(false);openModal('agenda')"><span class="qa-icon">💉</span><span><b>Novo Manejo</b><small>Vacina, medicamento ou tarefa</small></span></button>
+</div>
+<button id="fab" class="fab" onclick="toggleFab()">+</button>
+
+<div id="modal" class="modal"><div class="modal-box"><div class="section-head"><h2 id="modalTitle"></h2><button class="btn soft small" onclick="closeModal()">Fechar</button></div><div id="modalBody"></div></div></div>
+
+<div id="setup" class="setup"><div class="setup-box"><div style="text-align:center"><img class="setup-logo" src="icon-512.png" alt="BL Suínos Manager"><h1>BL Suínos Manager</h1><p>Gestão inteligente da suinocultura.</p></div><div class="card"><form id="setupForm"><input name="user" placeholder="Seu nome" required><input name="property" placeholder="Nome da granja" required><input name="city" placeholder="Cidade/Estado"><input name="arroba" type="number" step=".01" value="220" placeholder="Preço da arroba"><button class="btn primary">Começar</button></form></div></div></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
+const today=()=>new Date().toISOString().slice(0,10);
+const money=n=>Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const num=n=>Number(n||0).toLocaleString('pt-BR',{maximumFractionDigits:2});
+const KEY='blSuinosManagerV1';
+const blank={configured:false,config:{user:'',property:'',city:'',arroba:220,aiEndpoint:''},pigs:[],weights:[],feedings:[],birds:[],crops:[],stock:[],recipes:[],productions:[],finance:[],agenda:[],chat:[]};
+let db=JSON.parse(localStorage.getItem(KEY)||'null');
+if(!db){
+  const old=JSON.parse(localStorage.getItem('blAgroManagerV3')||'null');
+  db=old?{...structuredClone(blank),...old,weights:old.weights||[],feedings:old.feedings||[]}:structuredClone(blank);
+}
+db.weights=db.weights||[];db.feedings=db.feedings||[];db.config.aiEndpoint=db.config.aiEndpoint||'';
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function go(id){$$('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===id));$$('.view').forEach(v=>v.classList.toggle('active',v.id===id));window.scrollTo({top:0,behavior:'smooth'})}
+$$('[data-view]').forEach(b=>b.onclick=()=>go(b.dataset.view));
+$$('[data-sub]').forEach(b=>b.onclick=()=>{$$('[data-sub]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$$('.subview').forEach(x=>x.classList.add('hidden'));$('#'+b.dataset.sub).classList.remove('hidden')});
+function totals(){const r=db.finance.filter(x=>x.type==='receita').reduce((s,x)=>s+x.value,0),d=db.finance.filter(x=>x.type==='despesa').reduce((s,x)=>s+x.value,0);return{r,d,p:r-d}}
+function activePigs(){return db.pigs.reduce((s,x)=>s+Math.max(0,x.qty-x.dead),0)}
+function activeBirds(){return db.birds.reduce((s,x)=>s+Math.max(0,x.qty-x.dead),0)}
+function openModal(type,preset){
+ $('#modal').classList.add('open');const body=$('#modalBody');$('#modalTitle').textContent={pig:'Novo Lote',bird:'Novo Lote',crop:'Nova Cultura',ingredient:'Novo Ingrediente',stock:'Novo Item',move:'Movimentar Estoque',finance:'Lançamento Financeiro',agenda:'Novo Lembrete'}[type];
+ const forms={
+ pig:`<form id="modalForm"><input name="name" placeholder="Nome do lote" required><div class="row"><input name="qty" type="number" placeholder="Quantidade" required><input name="weight" type="number" step=".1" placeholder="Peso atual" required></div><div class="row"><input name="target" type="number" step=".1" placeholder="Peso meta" required><input name="price" type="number" step=".01" placeholder="Preço por animal"></div><input name="date" type="date" value="${today()}"><button class="btn primary">Salvar</button></form>`,
+ bird:`<form id="modalForm"><input name="name" placeholder="Nome do lote" required><div class="row"><input name="qty" type="number" placeholder="Quantidade" required><select name="kind"><option>Frango de corte</option><option>Poedeiras</option><option>Caipira</option></select></div><button class="btn primary">Salvar</button></form>`,
+ crop:`<form id="modalForm"><input name="name" placeholder="Cultura" required><div class="row"><input name="area" type="number" step=".01" placeholder="Área"><select name="unit"><option>hectare</option><option>tarefa</option><option>m²</option></select></div><div class="row"><input name="plant" type="date"><input name="harvest" type="date"></div><input name="cost" type="number" step=".01" placeholder="Custo"><button class="btn primary">Salvar</button></form>`,
+ ingredient:`<form id="modalForm"><input name="name" placeholder="Ingrediente" required><div class="row"><input name="qty" type="number" step=".01" placeholder="Quantidade kg"><input name="min" type="number" step=".01" placeholder="Estoque mínimo"></div><input name="cost" type="number" step=".01" placeholder="Custo por kg"><button class="btn primary">Salvar</button></form>`,
+ stock:`<form id="modalForm"><input name="name" placeholder="Item" required><select name="category"><option>Medicamento</option><option>Vacina</option><option>Limpeza</option><option>Material</option><option>Outros</option></select><div class="row"><input name="qty" type="number" step=".01" placeholder="Quantidade"><input name="min" type="number" step=".01" placeholder="Mínimo"></div><input name="cost" type="number" step=".01" placeholder="Custo unitário"><button class="btn primary">Salvar</button></form>`,
+ move:`<form id="modalForm"><input type="hidden" name="id" value="${preset||''}"><div class="row"><select name="type"><option value="entrada">Entrada</option><option value="saida">Saída</option></select><input name="qty" type="number" step=".01" placeholder="Quantidade" required></div><input name="value" type="number" step=".01" placeholder="Valor total"><input name="date" type="date" value="${today()}"><button class="btn primary">Registrar</button></form>`,
+ finance:`<form id="modalForm"><div class="row"><select name="type"><option value="despesa">Despesa</option><option value="receita">Receita</option></select><input name="date" type="date" value="${today()}"></div><select name="activity"><option>Suinocultura</option><option>Nutrição</option><option>Sanidade</option><option>Geral</option></select><input name="desc" placeholder="Descrição"><input name="value" type="number" step=".01" placeholder="Valor"><button class="btn primary">Salvar</button></form>`,
+ agenda:`<form id="modalForm"><div class="row"><select name="type"><option>Vacina</option><option>Medicamento</option><option>Pesagem</option><option>Manejo</option><option>Pagamento</option></select><input name="date" type="date" value="${today()}"></div><input name="desc" placeholder="Descrição"><button class="btn primary">Salvar</button></form>`};
+ body.innerHTML=forms[type];$('#modalForm').onsubmit=e=>submitModal(e,type)
+}
+function closeModal(){$('#modal').classList.remove('open')}
+function submitModal(e,type){e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries()),n=k=>Number(o[k]||0);
+ if(type==='pig'){db.pigs.push({id:uid(),name:o.name,qty:n('qty'),initialWeight:n('weight'),weight:n('weight'),target:n('target'),price:n('price'),dead:0,date:o.date});if(n('price'))db.finance.push({id:uid(),type:'despesa',activity:'Suinocultura',desc:'Compra '+o.name,value:n('qty')*n('price'),date:o.date})}
+ if(type==='bird')db.birds.push({id:uid(),name:o.name,qty:n('qty'),kind:o.kind,dead:0});
+ if(type==='crop')db.crops.push({id:uid(),name:o.name,area:n('area'),unit:o.unit,plant:o.plant,harvest:o.harvest,cost:n('cost')});
+ if(type==='ingredient')db.stock.push({id:uid(),name:o.name,category:'Ingrediente',qty:n('qty'),min:n('min'),cost:n('cost'),unit:'kg'});
+ if(type==='stock')db.stock.push({id:uid(),name:o.name,category:o.category,qty:n('qty'),min:n('min'),cost:n('cost'),unit:'un'});
+ if(type==='move'){const x=db.stock.find(y=>y.id===o.id);if(!x)return;if(o.type==='saida'&&n('qty')>x.qty){alert('Saldo insuficiente');return}x.qty+=o.type==='entrada'?n('qty'):-n('qty');if(n('value'))db.finance.push({id:uid(),type:o.type==='entrada'?'despesa':'receita',activity:x.category==='Ingrediente'?'Nutrição':'Geral',desc:o.type+' '+x.name,value:n('value'),date:o.date})}
+ if(type==='finance')db.finance.push({id:uid(),type:o.type,activity:o.activity,desc:o.desc,value:n('value'),date:o.date});
+ if(type==='agenda')db.agenda.push({id:uid(),type:o.type,date:o.date,desc:o.desc,done:false});
+ closeModal();save()
+}
+function openRecipeModal(){const ingredients=db.stock.filter(x=>x.category==='Ingrediente');if(!ingredients.length){alert('Cadastre ingredientes primeiro.');return}const name=prompt('Nome da receita:');if(!name)return;const items=[];for(const ing of ingredients){const p=Number(prompt(`Percentual de ${ing.name}:`,0));if(p>0)items.push({id:ing.id,p})}const total=items.reduce((s,x)=>s+x.p,0);if(Math.abs(total-100)>.01){alert('A soma precisa ser 100%.');return}db.recipes.push({id:uid(),name,items});save()}
+function toggleFab(force){const open=force===undefined?!$('#quickMenu').classList.contains('open'):force;$('#quickMenu').classList.toggle('open',open);$('#fabBackdrop').classList.toggle('open',open);$('#fab').classList.toggle('open',open)}
+function quickMove(){toggleFab(false);if(!db.stock.length){alert('Cadastre um item primeiro.');go('stock');return}openModal('move',db.stock[0].id)}
+function goProduce(){toggleFab(false);go('nutrition');$$('[data-sub]').find(x=>x.dataset.sub==='produce').click()}
+function editStock(id){const x=db.stock.find(y=>y.id===id);const qty=Number(prompt('Quantidade atual:',x.qty));if(Number.isFinite(qty))x.qty=qty;const min=Number(prompt('Estoque mínimo:',x.min));if(Number.isFinite(min))x.min=min;const cost=Number(prompt('Custo unitário:',x.cost));if(Number.isFinite(cost))x.cost=cost;save()}
+function weigh(id){const x=db.pigs.find(y=>y.id===id),v=Number(prompt('Novo peso médio:',x.weight));if(v)x.weight=v;save()}
+function pigDeath(id){const x=db.pigs.find(y=>y.id===id),v=Number(prompt('Quantidade de mortes:',1));if(v)x.dead=Math.min(x.qty,x.dead+v);save()}
+function sellPig(id){const x=db.pigs.find(y=>y.id===id),price=Number(prompt('Preço da arroba:',db.config.arroba));if(!price)return;const value=(x.qty-x.dead)*x.weight/15*price;db.finance.push({id:uid(),type:'receita',activity:'Suinocultura',desc:'Venda '+x.name,value,date:today()});x.qty=x.dead;save();alert('Receita lançada: '+money(value))}
+function getPigStats(){
+ const active=activePigs();
+ const avg=active?db.pigs.reduce((s,x)=>s+(x.qty-x.dead)*x.weight,0)/active:0;
+ const feed=db.feedings.reduce((s,x)=>s+x.qty,0);
+ const firstTotal=db.pigs.reduce((s,x)=>s+(x.qty-x.dead)*(x.initialWeight||x.weight),0);
+ const currentTotal=db.pigs.reduce((s,x)=>s+(x.qty-x.dead)*x.weight,0);
+ const gain=Math.max(0,currentTotal-firstTotal);
+ const fcr=gain>0?feed/gain:0;
+ const feedCost=db.feedings.reduce((s,x)=>s+x.cost,0);
+ const totalCost=totals().d;
+ const costKg=gain>0?totalCost/gain:0;
+ let saleDate='—',minDays=Infinity;
+ db.pigs.forEach(x=>{const ws=db.weights.filter(w=>w.lotId===x.id).sort((a,b)=>a.date.localeCompare(b.date));let gmd=0;
+  if(ws.length>=2){const a=ws[0],b=ws[ws.length-1],days=Math.max(1,(new Date(b.date)-new Date(a.date))/86400000);gmd=(b.weight-a.weight)/days}
+  if(gmd>0&&x.target>x.weight){const days=(x.target-x.weight)/gmd;if(days<minDays){minDays=days;const d=new Date();d.setDate(d.getDate()+Math.ceil(days));saleDate=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}}
+ });
+ const recent=db.weights.slice().sort((a,b)=>a.date.localeCompare(b.date));
+ let gmd=0;if(recent.length>=2){const a=recent[0],b=recent[recent.length-1],days=Math.max(1,(new Date(b.date)-new Date(a.date))/86400000);gmd=(b.weight-a.weight)/days*1000}
+ return{active,avg,feed,gain,fcr,costKg,saleDate,gmd,feedCost}
+}
+function render(){
+ const t=totals(),st=getPigStats(),feedReady=db.stock.filter(x=>x.category==='Ração pronta').reduce((s,x)=>s+x.qty,0);
+ const hr=new Date().getHours(),greet=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite';
+ $('#hello').textContent=greet+', '+(db.config.user||'produtor')+'! 👋';$('#dateChip').textContent='📅 '+new Date().toLocaleDateString('pt-BR');
+ $('#dashPigs').textContent=st.active;$('#dashAvgWeight').textContent=num(st.avg)+' kg';$('#dashGmd').textContent=num(st.gmd)+' g';$('#dashFeedUsed').textContent=num(st.feed)+' kg';
+ $('#dashFcr').textContent=num(st.fcr);$('#dashCostKg').textContent=money(st.costKg);$('#dashProfit').textContent=money(t.p);$('#dashProfit').className=t.p>=0?'positive':'negative';$('#dashSaleDate').textContent=st.saleDate;
+ const due=db.agenda.filter(x=>!x.done&&x.date<=today()),low=db.stock.filter(x=>x.qty<=x.min);
+ $('#todayList').innerHTML=due.length?due.slice(0,5).map((x,i)=>`<div class="activity-row"><span class="dot" style="color:${i%3===0?'#c9a729':i%3===1?'#e99425':'#4288d0'}">○</span><div><b>${x.desc}</b><small>${x.type}</small></div><span>${x.date.slice(5)}</span></div>`).join(''):'<div class="empty"><div class="empty-icon">📅</div>Nenhuma atividade para hoje.</div>';
+ $('#alertList').innerHTML=low.length?low.slice(0,5).map((x,i)=>`<div class="alert-row"><span>${i%2?'⚠️':'🔺'}</span><div><b>${x.name}</b><small>Abaixo do mínimo</small></div><span>›</span></div>`).join(''):'<div class="empty"><div class="empty-icon">✓</div>Nenhum alerta.</div>';
+ $('#criticalStock').innerHTML=low.length?low.slice(0,4).map(x=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:10px"><b>${x.name}</b><span class="negative">${num(x.qty)} ${x.unit}</span></div><div class="progress" style="margin-top:6px"><span style="width:${Math.min(100,x.min?x.qty/x.min*100:100)}%"></span></div><small class="muted">Mínimo: ${num(x.min)} ${x.unit}</small></div>`).join(''):'<div class="empty"><div class="empty-icon">▣</div>Nenhum item abaixo do mínimo.</div>';
+ const ordered=db.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(-7);
+ $('#weightEvolution').innerHTML=ordered.length?`<svg viewBox="0 0 300 120" style="width:100%;height:145px"><polyline fill="none" stroke="#237b31" stroke-width="4" points="${ordered.map((w,i)=>`${20+i*(260/Math.max(1,ordered.length-1))},${100-(w.weight/Math.max(...ordered.map(z=>z.weight),1))*75}`).join(' ')}"/>${ordered.map((w,i)=>`<circle cx="${20+i*(260/Math.max(1,ordered.length-1))}" cy="${100-(w.weight/Math.max(...ordered.map(z=>z.weight),1))*75}" r="4" fill="#237b31"/>`).join('')}</svg><div class="muted">Últimas ${ordered.length} pesagens</div>`:'<div class="empty"><div class="empty-icon">📈</div>Nenhuma pesagem registrada.</div>';
+ $('#pigCards').innerHTML=db.pigs.map(x=>{const pct=Math.min(100,x.weight/x.target*100),ws=db.weights.filter(w=>w.lotId===x.id).sort((a,b)=>a.date.localeCompare(b.date));let gmd=0;if(ws.length>=2){const a=ws[0],b=ws[ws.length-1],days=Math.max(1,(new Date(b.date)-new Date(a.date))/86400000);gmd=(b.weight-a.weight)/days*1000}return`<div class="card"><div style="display:flex;justify-content:space-between;gap:10px"><div><h3>${x.name}</h3><span class="badge">${x.weight<30?'Creche':x.weight<70?'Crescimento':'Terminação'}</span><p class="muted">${x.qty-x.dead} cabeças • Entrada: ${x.date}</p><p>Peso médio: <b>${num(x.weight)} kg</b><br>GMD: <b>${num(gmd)} g/dia</b></p></div><div style="width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#237b31 ${pct}%,#e4e8e4 0);font-weight:800">${num(pct)}%</div></div><div class="actions"><button class="btn soft small" onclick="openWeightModal('${x.id}')">Pesar</button><button class="btn soft small" onclick="pigDeath('${x.id}')">Morte</button><button class="btn gold small" onclick="sellPig('${x.id}')">Vender</button></div></div>`}).join('')||'<div class="empty"><div class="empty-icon">🐷</div>Nenhum lote cadastrado.</div>';
+ $('#pigRows').innerHTML='<tr><td colspan="5"></td></tr>';
+ renderWeights();
+ const ingredients=db.stock.filter(x=>x.category==='Ingrediente');$('#ingredientRows').innerHTML=ingredients.map(x=>`<tr><td>${x.name}</td><td>${num(x.qty)} kg</td><td>${money(x.cost)}</td><td>${num(x.min)}</td><td><button class="btn primary small" onclick="openModal('move','${x.id}')">Movimentar</button> <button class="btn soft small" onclick="editStock('${x.id}')">Editar</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum ingrediente.</td></tr>';
+ $('#recipeCards').innerHTML=db.recipes.map(r=>`<div class="card"><h3>${r.name}</h3>${r.items.map(i=>`<p>${db.stock.find(x=>x.id===i.id)?.name}: ${i.p}%</p>`).join('')}</div>`).join('')||'<div class="empty">Nenhuma receita.</div>';
+ $('#recipeSelect').innerHTML='<option value="">Selecione a receita</option>'+db.recipes.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+ $('#readyRows').innerHTML=db.stock.filter(x=>x.category==='Ração pronta').map(x=>`<tr><td>${x.name}</td><td>${num(x.qty)} kg</td><td>${money(x.cost)}</td><td>${money(x.qty*x.cost)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">Nenhuma ração pronta.</td></tr>';
+ $('#stockRows').innerHTML=db.stock.map(x=>`<tr><td>${x.name}</td><td>${x.category}</td><td class="${x.qty<=x.min?'negative':''}">${num(x.qty)} ${x.unit}</td><td>${num(x.min)}</td><td>${money(x.qty*x.cost)}</td><td><button class="btn primary small" onclick="openModal('move','${x.id}')">Movimentar</button> <button class="btn soft small" onclick="editStock('${x.id}')">Editar</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Nenhum item.</td></tr>';
+ $('#finRevenue').textContent=money(t.r);$('#finExpense').textContent=money(t.d);$('#finProfit').textContent=money(t.p);$('#finProfit').className=t.p>=0?'positive':'negative';$('#finMargin').textContent=t.r?num(t.p/t.r*100)+'%':'0%';
+ $('#financeRows').innerHTML=db.finance.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${x.desc}</td><td>${x.activity}</td><td class="${x.type==='receita'?'positive':'negative'}">${x.type==='receita'?'+':'-'} ${money(x.value)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">Nenhum lançamento.</td></tr>';
+ $('#agendaRows').innerHTML=db.agenda.map(x=>`<tr><td>${x.date}</td><td>${x.type}</td><td>${x.desc}</td><td><span class="badge">${x.done?'Concluído':'Pendente'}</span></td></tr>`).join('')||'<tr><td colspan="4" class="empty">Nenhuma atividade.</td></tr>';
+ $('#aiName').textContent=db.config.user||'produtor';$('#chat').innerHTML=db.chat.length?db.chat.map(x=>`<div class="msg ${x.role}">${x.text}</div>`).join(''):'<div class="msg bot">Olá! Pergunte sobre lotes, pesagens, estoque, ração, custos ou previsão de venda.</div>';
+ drawWeightChart();
+}
+function openWeightModal(lotId=''){
+ if(!db.pigs.length){alert('Cadastre um lote primeiro.');return}
+ $('#modal').classList.add('open');$('#modalTitle').textContent='Nova Pesagem';
+ $('#modalBody').innerHTML=`<form id="weightForm"><select name="lotId">${db.pigs.map(x=>`<option value="${x.id}" ${x.id===lotId?'selected':''}>${x.name}</option>`).join('')}</select><div class="row"><input name="weight" type="number" step=".01" placeholder="Peso médio (kg)" required><input name="date" type="date" value="${today()}" required></div><button class="btn primary">Salvar pesagem</button></form>`;
+ $('#weightForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries()),lot=db.pigs.find(x=>x.id===o.lotId);lot.weight=Number(o.weight);db.weights.push({id:uid(),lotId:o.lotId,weight:Number(o.weight),date:o.date});closeModal();save()}
+}
+function renderWeights(){
+ const rows=db.weights.slice().sort((a,b)=>b.date.localeCompare(a.date));
+ $('#weightRows').innerHTML=rows.map((w,idx)=>{const lot=db.pigs.find(x=>x.id===w.lotId),prev=db.weights.filter(x=>x.lotId===w.lotId&&x.date<w.date).sort((a,b)=>b.date.localeCompare(a.date))[0];let gmd=0;if(prev){const days=Math.max(1,(new Date(w.date)-new Date(prev.date))/86400000);gmd=(w.weight-prev.weight)/days*1000}return`<tr><td>${w.date}</td><td>${lot?.name||'Lote excluído'}</td><td>${num(w.weight)} kg</td><td>${num(gmd)} g/dia</td><td><button class="btn danger small" onclick="removeWeight('${w.id}')">Excluir</button></td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Nenhuma pesagem.</td></tr>'
+}
+function removeWeight(id){db.weights=db.weights.filter(x=>x.id!==id);save()}
+function drawWeightChart(){
+ const c=$('#weightChart');if(!c)return;const ctx=c.getContext('2d'),data=db.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(-12),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#e4e8e4';ctx.lineWidth=1;for(let i=1;i<5;i++){ctx.beginPath();ctx.moveTo(50,i*h/5);ctx.lineTo(w-20,i*h/5);ctx.stroke()}if(!data.length)return;const max=Math.max(...data.map(x=>x.weight),1),min=Math.min(...data.map(x=>x.weight),0);ctx.strokeStyle='#237b31';ctx.lineWidth=4;ctx.beginPath();data.forEach((x,i)=>{const px=50+i*(w-80)/Math.max(1,data.length-1),py=h-35-(x.weight-min)/Math.max(1,max-min)*(h-75);i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.stroke();ctx.fillStyle='#237b31';data.forEach((x,i)=>{const px=50+i*(w-80)/Math.max(1,data.length-1),py=h-35-(x.weight-min)/Math.max(1,max-min)*(h-75);ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fill()})
+}
+$('#produceForm').addEventListener('input',()=>{const r=db.recipes.find(x=>x.id===$('#recipeSelect').value),q=Number($('#produceQty').value||0);if(!r||!q){$('#producePreview').innerHTML='';return}$('#producePreview').innerHTML=r.items.map(i=>`<p>${db.stock.find(x=>x.id===i.id)?.name}: <b>${num(q*i.p/100)} kg</b></p>`).join('')});
+$('#produceForm').onsubmit=e=>{e.preventDefault();const r=db.recipes.find(x=>x.id===$('#recipeSelect').value),q=Number($('#produceQty').value);if(!r)return;let cost=0;for(const i of r.items){const s=db.stock.find(x=>x.id===i.id),need=q*i.p/100;if(!s||s.qty<need){alert('Estoque insuficiente de '+(s?.name||'ingrediente'));return}}for(const i of r.items){const s=db.stock.find(x=>x.id===i.id),need=q*i.p/100;s.qty-=need;cost+=need*s.cost}let ready=db.stock.find(x=>x.category==='Ração pronta'&&x.name===r.name);if(!ready){ready={id:uid(),name:r.name,category:'Ração pronta',qty:0,min:0,cost:0,unit:'kg'};db.stock.push(ready)}ready.cost=(ready.qty*ready.cost+cost)/(ready.qty+q);ready.qty+=q;db.productions.push({id:uid(),recipe:r.id,qty:q,cost,date:$('#produceDate').value});db.finance.push({id:uid(),type:'despesa',activity:'Nutrição',desc:'Produção '+r.name,value:cost,date:$('#produceDate').value});save();alert('Ração produzida com sucesso.')};
+$('#setupForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries());db.config={user:o.user,property:o.property,city:o.city,arroba:Number(o.arroba||220)};db.configured=true;$('#setup').classList.remove('open');save()};
+function openSettings(){const user=prompt('Seu nome:',db.config.user);if(user!==null)db.config.user=user;const property=prompt('Nome da granja:',db.config.property);if(property!==null)db.config.property=property;save()}
+function answer(q){const t=q.toLowerCase(),f=totals();if(t.includes('saldo'))return`Saldo: ${money(f.p)}.`;if(t.includes('estoque')||t.includes('milho')||t.includes('soja')||t.includes('núcleo'))return db.stock.map(x=>`${x.name}: ${num(x.qty)} ${x.unit}`).join('\n')||'Estoque vazio.';if(t.includes('ração')||t.includes('racao'))return`Ração pronta: ${num(db.stock.filter(x=>x.category==='Ração pronta').reduce((s,x)=>s+x.qty,0))} kg.`;if(t.includes('vender')||t.includes('arroba')){const kg=db.pigs.reduce((s,x)=>s+(x.qty-x.dead)*x.weight,0);return`Receita projetada: ${money(kg/15*db.config.arroba)}.`}return'Posso consultar saldo, estoque, ração e projeção de venda.'}
+function ask(){const q=$('#question').value.trim();if(!q)return;db.chat.push({role:'user',text:q});db.chat.push({role:'bot',text:answer(q)});$('#question').value='';save()}
+function startVoice(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Reconhecimento de voz indisponível. Use o Safari.');return}const r=new SR();r.lang='pt-BR';r.onstart=()=>{$('#voiceBtn').classList.add('listening');$('#voiceStatus').textContent='Ouvindo...'};r.onend=()=>{$('#voiceBtn').classList.remove('listening');$('#voiceStatus').textContent='Toque para falar'};r.onresult=e=>{$('#question').value=e.results[0][0].transcript;ask()};r.start()}
+function exportBackup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='backup-bl-agro.json';a.click()}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if(!db.configured)$('#setup').classList.add('open');$('#produceDate').value=today();render();
+</script>
+</body></html>
