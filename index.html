@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06351f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BL Suínos">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>BL Suínos Manager v5</title>
+<style>
+:root{
+--bg:#f5f7f4;--card:#fff;--text:#172018;--muted:#727b74;--line:#e4e8e3;
+--green:#1d732c;--green2:#06351f;--green3:#0a4a2c;--gold:#d5ad3f;--red:#d83931;
+--orange:#ef9f23;--blue:#3f85d5;--shadow:0 6px 20px rgba(18,55,31,.08)
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial;color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{
+position:sticky;top:0;z-index:40;
+background:linear-gradient(145deg,#052d1b,#073c24);
+padding:calc(10px + env(safe-area-inset-top)) 12px 0;color:#fff;
+box-shadow:0 4px 16px rgba(0,40,20,.18)
+}
+.head-row{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:auto;padding-bottom:8px}
+.head-logo{height:54px;width:auto;max-width:230px;object-fit:contain}
+.icon-btn{border:0;background:transparent;color:#fff;font-size:21px;padding:8px}
+.tabs{max-width:1100px;margin:auto;display:flex;overflow:auto;gap:2px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{min-width:64px;border:0;border-bottom:3px solid transparent;background:transparent;color:#fff;padding:8px 6px 7px;font-size:9px;white-space:nowrap;opacity:.9}
+.tabs button span{display:block;font-size:20px;line-height:1.1;margin-bottom:3px}
+.tabs button.active{color:#82ce2e;border-color:#82ce2e;opacity:1}
+main{max-width:1100px;margin:auto;padding:14px 14px calc(92px + env(safe-area-inset-bottom))}
+.view{display:none}.view.active{display:block;animation:fade .18s ease}
+@keyframes fade{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:3px 0 13px}
+.page-head h2{font-size:21px;margin:0}.page-head p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.date-chip{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:10px;color:var(--muted);white-space:nowrap}
+.grid{display:grid;gap:10px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}
+@media(min-width:760px){.kpis{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px;box-shadow:var(--shadow)}
+.kpi{text-align:center;min-height:135px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kpi small{font-size:10px;font-weight:750}.kpi .ico{font-size:25px;margin:9px 0 4px}.kpi strong{font-size:21px;color:#175f25}.kpi .sub{font-size:9px;color:var(--muted)}.kpi a{font-size:9px;color:#237b34;margin-top:5px;text-decoration:none}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:12px 2px 7px}.section-title h3{font-size:12px;margin:0}.section-title button{border:0;background:none;color:#237b34;font-size:9px}
+.row-item{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:10px}.row-item:last-child{border:0}.row-item b{display:block}.row-item small{color:var(--muted)}
+.empty{text-align:center;padding:34px 12px;color:var(--muted);font-size:11px}.empty .big{font-size:44px;opacity:.18;display:block;margin-bottom:7px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:11px}.section-head h2,.section-head h3{margin:0}.section-head h2{font-size:18px}
+.btn{border:0;border-radius:8px;padding:10px 12px;font-weight:800}.primary{background:linear-gradient(90deg,#2f932f,#257a28);color:#fff}.soft{background:#eff5ed;color:#246f31}.gold{background:var(--gold);color:#2a2208}.danger{background:#fee8e6;color:#b72e27}.small{padding:7px 9px;font-size:10px}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+form{display:grid;gap:9px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#399646;box-shadow:0 0 0 3px rgba(57,150,70,.1)}
+table{width:100%;border-collapse:collapse;font-size:10px}.table-wrap{overflow:auto}th,td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--muted)}
+.badge{display:inline-flex;padding:3px 7px;border-radius:999px;background:#e9f3e7;color:#237032;font-size:9px;font-weight:800}
+.subtabs{display:flex;gap:8px;border-bottom:1px solid var(--line);overflow:auto;margin-bottom:12px}.subtabs button{border:0;border-bottom:2px solid transparent;background:transparent;padding:8px 4px;color:var(--muted);font-size:10px;white-space:nowrap}.subtabs button.active{color:#287c33;border-color:#287c33;font-weight:800}
+.hidden{display:none!important}
+.progress{height:7px;border-radius:99px;background:#e8ece8;overflow:hidden}.progress span{height:100%;display:block;background:#2b8b35}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.58);display:none;align-items:flex-end;justify-content:center}.modal.open{display:flex}
+.sheet{width:min(680px,100%);max-height:91vh;overflow:auto;background:#fff;border-radius:18px 18px 0 0;padding:17px 17px calc(18px + env(safe-area-inset-bottom))}
+.fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:72;width:58px;height:58px;border-radius:50%;border:2px solid #b8d99b;background:linear-gradient(145deg,#4da634,#267e2a);color:#fff;font-size:34px;box-shadow:0 10px 25px rgba(25,90,36,.34)}
+.fab.open{transform:rotate(45deg)}
+.backdrop{position:fixed;inset:0;z-index:69;background:rgba(0,0,0,.25);display:none}.backdrop.open{display:block}
+.quick{position:fixed;right:15px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:70;background:rgba(35,37,35,.97);border:1px solid #666;border-radius:17px;padding:11px;width:min(290px,calc(100vw - 30px));display:none}.quick.open{display:block}
+.quick h3{margin:2px 4px 9px;color:#fff;font-size:12px}.quick button{width:100%;display:flex;align-items:center;gap:10px;text-align:left;border:0;border-radius:9px;background:#404240;color:#fff;padding:10px;margin:6px 0}.quick .qico{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:#173b22;color:#80ca2b}.quick b{font-size:11px}.quick small{display:block;color:#c8cbc8;font-size:9px;margin-top:2px}
+.onboarding{position:fixed;inset:0;z-index:200;background:linear-gradient(145deg,#052d1b,#0a5b34);display:none;overflow:auto;padding:calc(24px + env(safe-area-inset-top)) 15px calc(25px + env(safe-area-inset-bottom));color:#fff}.onboarding.open{display:block}
+.onbox{max-width:540px;margin:auto}.onlogo{display:block;width:min(360px,90%);margin:0 auto 16px;border-radius:18px}.onbox h1{text-align:center;margin:0 0 5px}.onbox>p{text-align:center;color:#d9eee0}.onbox .card{margin-top:18px}
+.chat-card{background:linear-gradient(165deg,#062d1b,#073d25);color:#fff;border-radius:14px;padding:15px}.mic{width:86px;height:86px;border-radius:50%;border:4px solid rgba(117,203,44,.3);background:radial-gradient(circle,#218a45,#073d25);color:#fff;font-size:38px;display:grid;place-items:center;margin:17px auto}.mic.listening{animation:pulse 1s infinite}@keyframes pulse{50%{transform:scale(1.05);box-shadow:0 0 0 15px rgba(110,190,43,.13)}}
+.chat{height:40vh;overflow:auto;display:flex;flex-direction:column;gap:8px}.msg{max-width:88%;padding:9px 11px;border-radius:10px;font-size:11px;white-space:pre-wrap}.msg.user{align-self:flex-end;background:#2f8e31}.msg.bot{align-self:flex-start;background:#17432a}
+.settings{background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden}.setting{display:flex;justify-content:space-between;align-items:center;padding:13px;border-bottom:1px solid var(--line);font-size:11px}.setting:last-child{border:0}.setting .left{display:flex;gap:10px;align-items:center}.setico{width:29px;height:29px;border-radius:8px;background:#edf5eb;display:grid;place-items:center;color:#277b33}
+svg{max-width:100%}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.filters input{width:auto;min-width:140px;flex:1}.icon-actions{display:flex;gap:5px;flex-wrap:wrap}.snackbar{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(140px);z-index:300;background:#202421;color:#fff;border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:14px;box-shadow:0 10px 30px rgba(0,0,0,.28);transition:.25s;max-width:calc(100vw - 28px);font-size:11px}.snackbar.show{transform:translateX(-50%) translateY(0)}.snackbar button{border:0;background:none;color:#95dc4d;font-weight:900}
+</style>
+</head>
+<body>
+<header>
+<div class="head-row">
+<img src="logo-bl-suinos.png" class="head-logo" alt="BL Suínos Manager">
+<button class="icon-btn">♧</button>
+</div>
+<nav class="tabs">
+<button class="active" data-view="dashboard"><span>⌂</span>Dashboard</button>
+<button data-view="lots"><span>🐷</span>Lotes</button>
+<button data-view="weights"><span>⚖</span>Pesagens</button>
+<button data-view="nutrition"><span>🥣</span>Nutrição</button>
+<button data-view="stock"><span>▣</span>Estoque</button>
+<button data-view="finance"><span>💲</span>Financeiro</button>
+<button data-view="more"><span>•••</span>Mais</button>
+</nav>
+</header>
+
+<main>
+<section id="dashboard" class="view active">
+<div class="page-head"><div><h2 id="greeting">Bom dia!</h2><p>Aqui está o resumo da sua granja hoje.</p></div><div id="dateChip" class="date-chip">📅 Hoje</div></div>
+<div class="grid kpis">
+<div class="card kpi"><small>Suínos ativos</small><span class="ico">🐷</span><strong id="kPigs">0</strong><span class="sub">cabeças</span><a onclick="go('lots')">Ver detalhes</a></div>
+<div class="card kpi"><small>Peso médio</small><span class="ico">⚖</span><strong id="kAvg">0 kg</strong><span class="sub">peso atual</span><a onclick="go('weights')">Ver detalhes</a></div>
+<div class="card kpi"><small>Ganho médio diário</small><span class="ico">📈</span><strong id="kGmd">0 g</strong><span class="sub">g/dia</span><a onclick="go('weights')">Ver detalhes</a></div>
+<div class="card kpi"><small>Consumo de ração</small><span class="ico">🥣</span><strong id="kFeed">0 kg</strong><span class="sub">registrado</span><a onclick="go('nutrition')">Ver detalhes</a></div>
+<div class="card kpi"><small>Conversão alimentar</small><span class="ico">◷</span><strong id="kFcr">0,00</strong><span class="sub">kg/kg</span><a onclick="go('reports')">Ver detalhes</a></div>
+<div class="card kpi"><small>Custo por kg</small><span class="ico">💲</span><strong id="kCost">R$ 0,00</strong><span class="sub">produzido</span><a onclick="go('finance')">Ver detalhes</a></div>
+<div class="card kpi"><small>Lucro estimado</small><span class="ico">💰</span><strong id="kProfit">R$ 0,00</strong><span class="sub">resultado atual</span><a onclick="go('finance')">Ver detalhes</a></div>
+<div class="card kpi"><small>Previsão de venda</small><span class="ico">📅</span><strong id="kSale">—</strong><span class="sub">próxima</span><a onclick="go('lots')">Ver detalhes</a></div>
+</div>
+<div class="grid two">
+<div><div class="section-title"><h3>Próximas atividades</h3><button onclick="go('agenda')">Ver agenda ›</button></div><div class="card" id="todayBox"></div></div>
+<div><div class="section-title"><h3>Alertas importantes</h3><button onclick="go('stock')">Ver todos ›</button></div><div class="card" id="alertsBox"></div></div>
+</div>
+<div class="grid two">
+<div><div class="section-title"><h3>Estoque crítico</h3><button onclick="go('stock')">Ver estoque ›</button></div><div class="card" id="criticalBox"></div></div>
+<div><div class="section-title"><h3>Evolução do peso médio</h3><button onclick="go('weights')">Ver pesagens ›</button></div><div class="card" id="weightBox"></div></div>
+</div>
+</section>
+
+<section id="lots" class="view">
+<div class="section-head"><div><h2>Lotes</h2><div class="sub">Controle completo dos lotes da granja.</div></div><button class="btn primary" onclick="openLot()">+ Novo lote</button></div>
+<div class="subtabs"><button class="active">Ativos</button><button>Finalizados</button><button>Todos</button></div>
+<div class="filters"><input id="lotSearch" placeholder="Pesquisar lote..."></div>
+<div id="lotCards" class="grid two"></div>
+</section>
+
+<section id="weights" class="view">
+<div class="section-head"><div><h2>Pesagens</h2><div class="sub">Evolução do peso médio e GMD.</div></div><button class="btn primary" onclick="openWeight()">+ Nova pesagem</button></div>
+<div class="filters"><input id="weightSearch" placeholder="Pesquisar lote..."><input id="weightFrom" type="date"><input id="weightTo" type="date"></div>
+<div class="card"><canvas id="weightChart" width="900" height="280" style="width:100%;height:220px"></canvas></div>
+<div class="card" style="margin-top:10px"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Lote</th><th>Peso médio</th><th>GMD</th><th></th></tr></thead><tbody id="weightRows"></tbody></table></div></div>
+</section>
+
+<section id="nutrition" class="view">
+<div class="section-head"><div><h2>Nutrição</h2><div class="sub">Receitas, produção e consumo de ração.</div></div></div>
+<div class="subtabs">
+<button class="active" data-sub="recipes">Receitas</button>
+<button data-sub="ingredients">Ingredientes</button>
+<button data-sub="produce">Produzir ração</button>
+<button data-sub="ready">Ração pronta</button>
+</div>
+<div id="recipes" class="subview"><div class="filters"><input id="recipeSearch" placeholder="Pesquisar receita..."></div><div class="section-head"><h3>Minhas receitas</h3><button class="btn primary" onclick="openRecipe()">+ Nova receita</button></div><div id="recipeCards" class="grid two"></div></div>
+<div id="ingredients" class="subview hidden"><div class="section-head"><h3>Ingredientes</h3><button class="btn primary" onclick="openIngredient()">+ Novo ingrediente</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Ingrediente</th><th>Saldo</th><th>Custo</th><th>Mínimo</th><th></th></tr></thead><tbody id="ingredientRows"></tbody></table></div></div></div>
+<div id="produce" class="subview hidden"><div class="card"><h3>Produzir ração</h3><form id="produceForm"><select id="produceRecipe" required></select><div class="form-row"><input id="produceQty" type="number" step=".01" placeholder="Quantidade em kg" required><input id="produceDate" type="date" required></div><div id="producePreview"></div><button class="btn primary">Produzir</button></form></div></div>
+<div id="ready" class="subview hidden"><div class="card"><div class="table-wrap"><table><thead><tr><th>Ração</th><th>Quantidade</th><th>Custo/kg</th><th>Valor</th></tr></thead><tbody id="readyRows"></tbody></table></div></div></div>
+</section>
+
+<section id="stock" class="view">
+<div class="section-head"><div><h2>Estoque</h2><div class="sub">Ingredientes, ração, medicamentos, vacinas e materiais.</div></div><button class="btn primary" onclick="openStock()">+ Novo item</button></div>
+<div class="filters"><input id="stockSearch" placeholder="Pesquisar item..."></div>
+<div class="subtabs"><button class="active" data-filter="Todos">Todos</button><button data-filter="Ingrediente">Ingredientes</button><button data-filter="Ração pronta">Ração</button><button data-filter="Medicamento">Medicamentos</button><button data-filter="Vacina">Vacinas</button><button data-filter="Limpeza">Limpeza</button><button data-filter="Material">Materiais</button></div>
+<div class="card"><div class="table-wrap"><table><thead><tr><th>Item</th><th>Categoria</th><th>Saldo</th><th>Mínimo</th><th>Valor</th><th></th></tr></thead><tbody id="stockRows"></tbody></table></div></div>
+</section>
+
+<section id="finance" class="view">
+<div class="section-head"><div><h2>Financeiro</h2><div class="sub">Receitas, despesas e lucro da granja.</div></div><button class="btn primary" onclick="openFinance()">+ Lançamento</button></div>
+<div class="filters"><input id="financeSearch" placeholder="Pesquisar lançamento..."><input id="financeFrom" type="date"><input id="financeTo" type="date"></div>
+<div class="grid kpis">
+<div class="card kpi"><small>Receitas</small><span class="ico">↗</span><strong id="fRevenue">R$ 0,00</strong></div>
+<div class="card kpi"><small>Despesas</small><span class="ico">↘</span><strong id="fExpense">R$ 0,00</strong></div>
+<div class="card kpi"><small>Lucro</small><span class="ico">💰</span><strong id="fProfit">R$ 0,00</strong></div>
+<div class="card kpi"><small>Margem</small><span class="ico">%</span><strong id="fMargin">0%</strong></div>
+</div>
+<div class="card" style="margin-top:10px"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th></th></tr></thead><tbody id="financeRows"></tbody></table></div></div>
+</section>
+
+<section id="agenda" class="view">
+<div class="section-head"><div><h2>Sanidade e Agenda</h2><div class="sub">Vacinas, medicamentos, limpezas, pesagens e manejos.</div></div><button class="btn primary" onclick="openAgenda()">+ Nova atividade</button></div>
+<div class="filters"><input id="agendaSearch" placeholder="Pesquisar atividade..."><input id="agendaFrom" type="date"><input id="agendaTo" type="date"></div>
+<div class="card"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Status</th><th></th></tr></thead><tbody id="agendaRows"></tbody></table></div></div>
+</section>
+
+<section id="reports" class="view">
+<div class="section-head"><div><h2>Relatórios</h2><div class="sub">Indicadores técnicos e financeiros.</div></div></div>
+<div class="grid two"><div class="card"><h3>Indicadores produtivos</h3><div id="prodReport"></div></div><div class="card"><h3>Resultado financeiro</h3><div id="finReport"></div></div></div>
+<div class="card" style="margin-top:10px"><h3>Backup e exportação</h3><div class="actions"><button class="btn soft" onclick="exportBackup()">Exportar backup</button><label class="btn gold">Importar backup<input id="importFile" type="file" accept=".json" hidden></label><button class="btn soft" onclick="exportCSV()">Exportar financeiro CSV</button></div></div>
+</section>
+
+<section id="ai" class="view">
+<div class="chat-card"><h2 style="text-align:center;margin:0">BL IA</h2><p style="text-align:center;font-size:11px">Pergunte sobre lotes, ração, estoque, custos ou previsão de venda.</p>
+<button id="mic" class="mic" onclick="toggleVoice()">🎤</button><div id="voiceText" style="text-align:center;font-size:10px">Toque para falar</div>
+<div id="chat" class="chat"></div>
+<div class="form-row"><input id="question" placeholder="Digite sua pergunta"><button class="btn primary" onclick="ask()">Enviar</button></div>
+</div>
+<div class="card" style="margin-top:10px"><h3>Conexão opcional com ChatGPT</h3><p class="sub">Por segurança, a chave não deve ficar dentro do aplicativo. Informe um endpoint seguro quando tiver um servidor intermediário.</p><form id="aiForm"><input id="aiEndpoint" placeholder="Endpoint seguro opcional"><button class="btn primary">Salvar</button></form></div>
+</section>
+
+<section id="more" class="view">
+<div class="section-head"><h2>Mais</h2></div>
+<div class="settings">
+<div class="setting" onclick="openFarm()"><div class="left"><span class="setico">⌂</span><div><b>Minha Granja</b><div class="sub">Dados da propriedade</div></div></div><span>›</span></div>
+<div class="setting" onclick="go('agenda')"><div class="left"><span class="setico">💉</span><div><b>Sanidade e Agenda</b><div class="sub">Vacinas, medicamentos e manejos</div></div></div><span>›</span></div>
+<div class="setting" onclick="go('reports')"><div class="left"><span class="setico">▥</span><div><b>Relatórios</b><div class="sub">GMD, conversão, custos e lucro</div></div></div><span>›</span></div>
+<div class="setting" onclick="go('ai')"><div class="left"><span class="setico">◌</span><div><b>BL IA</b><div class="sub">Texto, voz e integração segura</div></div></div><span>›</span></div>
+<div class="setting" onclick="exportBackup()"><div class="left"><span class="setico">☁</span><div><b>Backup</b><div class="sub">Salve uma cópia dos dados</div></div></div><span>›</span></div>
+</div>
+</section>
+</main>
+
+<div id="backdrop" class="backdrop" onclick="toggleQuick(false)"></div>
+<div id="quick" class="quick"><h3>AÇÕES RÁPIDAS</h3>
+<button onclick="toggleQuick(false);openLot()"><span class="qico">🐷</span><span><b>Novo lote</b><small>Cadastre um lote de suínos</small></span></button>
+<button onclick="toggleQuick(false);openWeight()"><span class="qico">⚖</span><span><b>Nova pesagem</b><small>Atualize o peso do lote</small></span></button>
+<button onclick="toggleQuick(false);openIngredient()"><span class="qico">🌽</span><span><b>Novo ingrediente</b><small>Cadastre um ingrediente</small></span></button>
+<button onclick="quickMove()"><span class="qico">▣</span><span><b>Movimentar estoque</b><small>Entrada ou saída de produtos</small></span></button>
+<button onclick="quickProduce()"><span class="qico">🥣</span><span><b>Produzir ração</b><small>Fabrique uma receita</small></span></button>
+<button onclick="toggleQuick(false);openAgenda()"><span class="qico">💉</span><span><b>Novo manejo</b><small>Vacina, medicamento ou tarefa</small></span></button>
+</div>
+<button id="fab" class="fab" onclick="toggleQuick()">+</button>
+
+<div id="modal" class="modal"><div class="sheet"><div class="section-head"><h2 id="modalTitle"></h2><button class="btn soft small" onclick="closeModal()">Fechar</button></div><div id="modalBody"></div></div></div>
+
+<div id="snackbar" class="snackbar"><span id="snackbarText"></span><button onclick="undoDeleteV5()">DESFAZER</button></div>
+<div id="onboarding" class="onboarding">
+<div class="onbox">
+<img src="logo-bl-suinos.png" class="onlogo" alt="BL Suínos Manager">
+<h1>BL Suínos Manager</h1><p>Gestão inteligente da suinocultura.</p>
+<div class="card">
+<form id="setupForm">
+<input name="user" placeholder="Seu nome" required>
+<input name="farm" placeholder="Nome da granja" required>
+<input name="city" placeholder="Cidade/Estado">
+<input name="arroba" type="number" step=".01" value="220" placeholder="Preço da arroba">
+<button class="btn primary">Começar</button>
+</form>
+</div>
+</div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const KEY='blSuinosManagerV4';
+const blank={configured:false,config:{user:'',farm:'',city:'',arroba:220,endpoint:''},lots:[],weights:[],feedings:[],stock:[],recipes:[],productions:[],finance:[],agenda:[],chat:[]};
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(blank);
+let filter='Todos',recognition=null,listening=false;
+const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
+const today=()=>new Date().toISOString().slice(0,10);
+const money=n=>Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const num=n=>Number(n||0).toLocaleString('pt-BR',{maximumFractionDigits:2});
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function go(id){$$('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===id));$$('.view').forEach(v=>v.classList.toggle('active',v.id===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='weights')setTimeout(drawWeightChart,50)}
+$$('[data-view]').forEach(b=>b.onclick=()=>go(b.dataset.view));
+$$('[data-sub]').forEach(b=>b.onclick=()=>{$$('[data-sub]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$$('.subview').forEach(x=>x.classList.add('hidden'));$('#'+b.dataset.sub).classList.remove('hidden')});
+$$('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderStock()});
+function closeModal(){$('#modal').classList.remove('open')}
+function showModal(title,html){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=html;$('#modal').classList.add('open')}
+function toggleQuick(force){const open=force===undefined?!$('#quick').classList.contains('open'):force;$('#quick').classList.toggle('open',open);$('#backdrop').classList.toggle('open',open);$('#fab').classList.toggle('open',open)}
+function totals(){const r=db.finance.filter(x=>x.type==='receita').reduce((s,x)=>s+x.value,0),d=db.finance.filter(x=>x.type==='despesa').reduce((s,x)=>s+x.value,0);return{r,d,p:r-d}}
+function activeCount(){return db.lots.filter(x=>!x.closed).reduce((s,x)=>s+Math.max(0,x.qty-x.dead),0)}
+function stats(){
+ const active=activeCount(),avg=active?db.lots.filter(x=>!x.closed).reduce((s,x)=>s+(x.qty-x.dead)*x.weight,0)/active:0;
+ const feed=db.feedings.reduce((s,x)=>s+x.qty,0);
+ const init=db.lots.filter(x=>!x.closed).reduce((s,x)=>s+(x.qty-x.dead)*x.initialWeight,0);
+ const cur=db.lots.filter(x=>!x.closed).reduce((s,x)=>s+(x.qty-x.dead)*x.weight,0);
+ const gain=Math.max(0,cur-init),fcr=gain>0?feed/gain:0,t=totals(),cost=gain>0?t.d/gain:0;
+ let all=db.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)),gmd=0;
+ if(all.length>=2){const a=all[0],b=all[all.length-1],days=Math.max(1,(new Date(b.date)-new Date(a.date))/86400000);gmd=(b.weight-a.weight)/days*1000}
+ let sale='—',min=Infinity;
+ db.lots.filter(x=>!x.closed).forEach(l=>{const ws=db.weights.filter(w=>w.lotId===l.id).sort((a,b)=>a.date.localeCompare(b.date));if(ws.length>=2){const a=ws[0],b=ws[ws.length-1],days=Math.max(1,(new Date(b.date)-new Date(a.date))/86400000),daily=(b.weight-a.weight)/days;if(daily>0&&l.target>l.weight){const n=(l.target-l.weight)/daily;if(n<min){min=n;const d=new Date();d.setDate(d.getDate()+Math.ceil(n));sale=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}}}});
+ return{active,avg,feed,gain,fcr,cost,gmd,sale,...t}
+}
+function openLot(){
+ showModal('Novo lote',`<form id="lotForm"><input name="name" placeholder="Nome do lote" required><div class="form-row"><input name="qty" type="number" placeholder="Quantidade de suínos" required><input name="weight" type="number" step=".01" placeholder="Peso médio de entrada" required></div><div class="form-row"><input name="target" type="number" step=".01" value="110" placeholder="Peso meta"><input name="animalCost" type="number" step=".01" placeholder="Custo por animal"></div><input name="date" type="date" value="${today()}" required><button class="btn primary">Salvar lote</button></form>`);
+ $('#lotForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries()),qty=Number(o.qty),cost=Number(o.animalCost||0);const lot={id:uid(),name:o.name,qty,dead:0,initialWeight:Number(o.weight),weight:Number(o.weight),target:Number(o.target||110),date:o.date,closed:false};db.lots.push(lot);db.weights.push({id:uid(),lotId:lot.id,weight:lot.weight,date:o.date});if(cost)db.finance.push({id:uid(),type:'despesa',category:'Compra de animais',desc:o.name,value:qty*cost,date:o.date});closeModal();save()}
+}
+function openWeight(lotId=''){
+ if(!db.lots.length){alert('Cadastre um lote primeiro.');return}
+ showModal('Nova pesagem',`<form id="weightForm"><select name="lotId">${db.lots.filter(x=>!x.closed).map(x=>`<option value="${x.id}" ${x.id===lotId?'selected':''}>${x.name}</option>`).join('')}</select><div class="form-row"><input name="weight" type="number" step=".01" placeholder="Peso médio (kg)" required><input name="date" type="date" value="${today()}" required></div><button class="btn primary">Salvar pesagem</button></form>`);
+ $('#weightForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries()),lot=db.lots.find(x=>x.id===o.lotId);lot.weight=Number(o.weight);db.weights.push({id:uid(),lotId:o.lotId,weight:Number(o.weight),date:o.date});closeModal();save()}
+}
+function openIngredient(){showModal('Novo ingrediente',`<form id="ingredientForm"><input name="name" placeholder="Nome do ingrediente" required><div class="form-row"><input name="qty" type="number" step=".01" placeholder="Quantidade em estoque" required><input name="min" type="number" step=".01" placeholder="Estoque mínimo"></div><div class="form-row"><input name="cost" type="number" step=".01" placeholder="Custo por kg"><select name="unit"><option>kg</option><option>litro</option><option>saco</option></select></div><input name="supplier" placeholder="Fornecedor"><button class="btn primary">Salvar ingrediente</button></form>`);$('#ingredientForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries());db.stock.push({id:uid(),name:o.name,category:'Ingrediente',qty:Number(o.qty),min:Number(o.min||0),cost:Number(o.cost||0),unit:o.unit,supplier:o.supplier});closeModal();save()}}
+function openStock(){showModal('Novo item de estoque',`<form id="stockForm"><input name="name" placeholder="Nome do item" required><select name="category"><option>Medicamento</option><option>Vacina</option><option>Limpeza</option><option>Material</option><option>Outros</option></select><div class="form-row"><input name="qty" type="number" step=".01" placeholder="Quantidade" required><input name="min" type="number" step=".01" placeholder="Mínimo"></div><div class="form-row"><input name="cost" type="number" step=".01" placeholder="Custo unitário"><select name="unit"><option>unidade</option><option>kg</option><option>litro</option><option>saco</option></select></div><button class="btn primary">Salvar item</button></form>`);$('#stockForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries());db.stock.push({id:uid(),name:o.name,category:o.category,qty:Number(o.qty),min:Number(o.min||0),cost:Number(o.cost||0),unit:o.unit});closeModal();save()}}
+function openMove(id){const item=db.stock.find(x=>x.id===id);showModal('Movimentar estoque',`<form id="moveForm"><p><b>${item.name}</b> — saldo ${num(item.qty)} ${item.unit}</p><div class="form-row"><select name="type"><option value="entrada">Entrada</option><option value="saida">Saída</option></select><input name="qty" type="number" step=".01" placeholder="Quantidade" required></div><input name="value" type="number" step=".01" placeholder="Valor total"><input name="date" type="date" value="${today()}"><label><input type="checkbox" name="finance" checked style="width:auto"> Integrar ao financeiro</label><button class="btn primary">Confirmar</button></form>`);$('#moveForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries()),q=Number(o.qty),v=Number(o.value||0);if(o.type==='saida'&&q>item.qty){alert('Saldo insuficiente.');return}item.qty+=o.type==='entrada'?q:-q;if(o.type==='entrada'&&v)item.cost=v/q;if(o.finance==='on'&&v)db.finance.push({id:uid(),type:o.type==='entrada'?'despesa':'receita',category:'Estoque',desc:`${o.type} - ${item.name}`,value:v,date:o.date});closeModal();save()}}
+function quickMove(){toggleQuick(false);if(!db.stock.length){go('stock');alert('Cadastre primeiro um item no estoque.');return}openMove(db.stock[0].id)}
+function openRecipe(){
+ const ingredients=db.stock.filter(x=>x.category==='Ingrediente');if(!ingredients.length){alert('Cadastre ingredientes primeiro.');go('nutrition');$$('[data-sub]').find(x=>x.dataset.sub==='ingredients').click();return}
+ showModal('Nova receita',`<form id="recipeForm"><input name="name" placeholder="Nome da receita" required><input name="phase" placeholder="Fase: Inicial, Crescimento, Terminação..."><div id="recipeLines"></div><button type="button" class="btn soft" onclick="addRecipeLine()">+ Ingrediente</button><div id="recipeTotal" class="sub">Total: 0%</div><button class="btn primary">Salvar receita</button></form>`);addRecipeLine();$('#recipeForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries()),items=$$('.recipe-line').map(r=>({itemId:r.querySelector('select').value,percent:Number(r.querySelector('input').value)})),total=items.reduce((s,x)=>s+x.percent,0);if(Math.abs(total-100)>.01){alert('A soma precisa ser 100%.');return}db.recipes.push({id:uid(),name:o.name,phase:o.phase,items});closeModal();save()}
+}
+function addRecipeLine(){const d=document.createElement('div');d.className='form-row recipe-line';d.innerHTML=`<select>${db.stock.filter(x=>x.category==='Ingrediente').map(x=>`<option value="${x.id}">${x.name}</option>`).join('')}</select><input type="number" step=".01" placeholder="% da fórmula" oninput="updateRecipeTotal()" required>`;$('#recipeLines').appendChild(d);updateRecipeTotal()}
+function updateRecipeTotal(){if(!$('#recipeTotal'))return;$('#recipeTotal').textContent='Total: '+num($$('.recipe-line input').reduce((s,x)=>s+Number(x.value||0),0))+'%'}
+function quickProduce(){toggleQuick(false);go('nutrition');$$('[data-sub]').find(x=>x.dataset.sub==='produce').click()}
+function openFinance(){showModal('Novo lançamento',`<form id="financeForm"><div class="form-row"><select name="type"><option value="despesa">Despesa</option><option value="receita">Receita</option></select><input name="date" type="date" value="${today()}"></div><input name="category" placeholder="Categoria" required><input name="desc" placeholder="Descrição" required><input name="value" type="number" step=".01" placeholder="Valor" required><button class="btn primary">Salvar</button></form>`);$('#financeForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries());db.finance.push({id:uid(),...o,value:Number(o.value)});closeModal();save()}}
+function openAgenda(){showModal('Nova atividade',`<form id="agendaForm"><div class="form-row"><select name="type"><option>Vacina</option><option>Medicamento</option><option>Pesagem</option><option>Limpeza</option><option>Manejo</option><option>Pagamento</option></select><input name="date" type="date" value="${today()}"></div><input name="desc" placeholder="Descrição" required><button class="btn primary">Salvar atividade</button></form>`);$('#agendaForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries());db.agenda.push({id:uid(),...o,done:false});closeModal();save()}}
+function openFarm(){showModal('Minha Granja',`<form id="farmForm"><input name="user" value="${db.config.user}" placeholder="Seu nome"><input name="farm" value="${db.config.farm}" placeholder="Nome da granja"><input name="city" value="${db.config.city}" placeholder="Cidade/Estado"><input name="arroba" type="number" step=".01" value="${db.config.arroba}"><button class="btn primary">Salvar</button></form>`);$('#farmForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries());db.config={...db.config,...o,arroba:Number(o.arroba||220)};closeModal();save()}}
+function death(id){const l=db.lots.find(x=>x.id===id),q=Number(prompt('Quantidade de mortes:',1));if(q>0){l.dead=Math.min(l.qty,l.dead+q);save()}}
+function sell(id){const l=db.lots.find(x=>x.id===id),active=l.qty-l.dead,price=Number(prompt('Preço da arroba:',db.config.arroba));if(!price)return;const value=active*l.weight/15*price;db.finance.push({id:uid(),type:'receita',category:'Venda de suínos',desc:l.name,value,date:today()});l.closed=true;save();alert('Receita registrada: '+money(value))}
+function removeWeight(id){db.weights=db.weights.filter(x=>x.id!==id);save()}
+function deleteFinance(id){db.finance=db.finance.filter(x=>x.id!==id);save()}
+function toggleAgenda(id){const a=db.agenda.find(x=>x.id===id);a.done=!a.done;save()}
+$('#produceForm').oninput=previewProduce;
+$('#produceForm').onsubmit=e=>{e.preventDefault();const r=db.recipes.find(x=>x.id===$('#produceRecipe').value),q=Number($('#produceQty').value),date=$('#produceDate').value;if(!r||!q)return;let cost=0;for(const p of r.items){const i=db.stock.find(x=>x.id===p.itemId),need=q*p.percent/100;if(!i||i.qty<need){alert('Estoque insuficiente de '+(i?.name||'ingrediente'));return}}for(const p of r.items){const i=db.stock.find(x=>x.id===p.itemId),need=q*p.percent/100;i.qty-=need;cost+=need*i.cost}let ready=db.stock.find(x=>x.category==='Ração pronta'&&x.name===r.name);if(!ready){ready={id:uid(),name:r.name,category:'Ração pronta',qty:0,min:0,cost:0,unit:'kg'};db.stock.push(ready)}const old=ready.qty*ready.cost;ready.qty+=q;ready.cost=(old+cost)/ready.qty;db.productions.push({id:uid(),recipeId:r.id,qty:q,cost,date});db.finance.push({id:uid(),type:'despesa',category:'Produção de ração',desc:r.name,value:cost,date});e.target.reset();save();alert('Ração produzida. Custo: '+money(cost))}
+function previewProduce(){const r=db.recipes.find(x=>x.id===$('#produceRecipe').value),q=Number($('#produceQty').value||0);if(!r||!q){$('#producePreview').innerHTML='';return}let cost=0;$('#producePreview').innerHTML=r.items.map(p=>{const i=db.stock.find(x=>x.id===p.itemId),need=q*p.percent/100;cost+=need*(i?.cost||0);return`<p class="sub">${i?.name}: <b>${num(need)} kg</b>${i&&i.qty<need?' <span style="color:red">insuficiente</span>':''}</p>`}).join('')+`<p><b>Custo estimado: ${money(cost)} (${money(cost/q)}/kg)</b></p>`}
+$('#setupForm').onsubmit=e=>{e.preventDefault();const o=Object.fromEntries(new FormData(e.target).entries());db.config={...db.config,user:o.user,farm:o.farm,city:o.city,arroba:Number(o.arroba||220)};db.configured=true;$('#onboarding').classList.remove('open');save()}
+$('#aiForm').onsubmit=e=>{e.preventDefault();db.config.endpoint=$('#aiEndpoint').value;save();alert('Configuração salva.')}
+function localAI(q){const t=q.toLowerCase(),s=stats();if(t.includes('quantos suínos')||t.includes('quantos suinos'))return`Você tem ${s.active} suínos ativos.`;if(t.includes('estoque')||t.includes('milho')||t.includes('soja')||t.includes('ração'))return db.stock.map(x=>`${x.name}: ${num(x.qty)} ${x.unit}`).join('\n')||'O estoque está vazio.';if(t.includes('lucro')||t.includes('saldo'))return`Receitas: ${money(s.r)}. Despesas: ${money(s.d)}. Resultado: ${money(s.p)}.`;if(t.includes('abate')||t.includes('venda'))return s.sale==='—'?'Ainda não há pesagens suficientes para estimar a próxima venda.':`A próxima previsão de venda é ${s.sale}.`;if(t.includes('peso'))return`O peso médio atual é ${num(s.avg)} kg.`;return'Posso responder sobre suínos ativos, peso, ração, estoque, lucro e previsão de venda.'}
+async function ask(){const input=$('#question'),q=input.value.trim();if(!q)return;db.chat.push({role:'user',text:q});input.value='';let answer;if(db.config.endpoint){try{const r=await fetch(db.config.endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,data:db})});const j=await r.json();answer=j.answer||localAI(q)}catch{answer='A integração não respondeu. '+localAI(q)}}else answer=localAI(q);db.chat.push({role:'bot',text:answer});save();$('#chat').scrollTop=$('#chat').scrollHeight}
+function toggleVoice(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('O reconhecimento de voz não está disponível neste navegador. Use o Safari e permita o microfone.');return}if(listening){recognition.stop();return}recognition=new SR();recognition.lang='pt-BR';recognition.onstart=()=>{listening=true;$('#mic').classList.add('listening');$('#voiceText').textContent='Ouvindo...'};recognition.onend=()=>{listening=false;$('#mic').classList.remove('listening');$('#voiceText').textContent='Toque para falar'};recognition.onresult=e=>{$('#question').value=e.results[0][0].transcript;ask()};recognition.start()}
+function render(){
+ const s=stats(),hr=new Date().getHours(),greet=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite';
+ $('#greeting').textContent=`${greet}, ${db.config.user||'produtor'}! 👋`;$('#dateChip').textContent='📅 '+new Date().toLocaleDateString('pt-BR');
+ $('#kPigs').textContent=s.active;$('#kAvg').textContent=num(s.avg)+' kg';$('#kGmd').textContent=num(s.gmd)+' g';$('#kFeed').textContent=num(s.feed)+' kg';$('#kFcr').textContent=num(s.fcr);$('#kCost').textContent=money(s.cost);$('#kProfit').textContent=money(s.p);$('#kSale').textContent=s.sale;
+ const due=db.agenda.filter(x=>!x.done&&x.date<=today()),low=db.stock.filter(x=>x.qty<=x.min);
+ $('#todayBox').innerHTML=due.length?due.slice(0,5).map((x,i)=>`<div class="row-item"><span>${i%3===0?'🟡':i%3===1?'🔵':'⚪'}</span><div><b>${x.desc}</b><small>${x.type}</small></div><span>${x.date.slice(5)}</span></div>`).join(''):'<div class="empty"><span class="big">📅</span>Nenhuma atividade para hoje.</div>';
+ $('#alertsBox').innerHTML=low.length?low.slice(0,5).map(x=>`<div class="row-item"><span>🔺</span><div><b>${x.name}</b><small>Abaixo do estoque mínimo</small></div><span>›</span></div>`).join(''):'<div class="empty"><span class="big">✓</span>Nenhum alerta importante.</div>';
+ $('#criticalBox').innerHTML=low.length?low.slice(0,4).map(x=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:10px"><b>${x.name}</b><span style="color:#d83931">${num(x.qty)} ${x.unit}</span></div><div class="progress" style="margin-top:6px"><span style="width:${Math.min(100,x.min?x.qty/x.min*100:100)}%"></span></div><small class="sub">Mínimo: ${num(x.min)} ${x.unit}</small></div>`).join(''):'<div class="empty"><span class="big">▣</span>Nenhum item abaixo do mínimo.</div>';
+ renderMiniWeight();
+ renderLots();renderWeights();renderNutrition();renderStock();renderFinance();renderAgenda();renderReports();renderChat();
+ $('#produceDate').value=$('#produceDate').value||today();$('#aiEndpoint').value=db.config.endpoint||''
+}
+function renderMiniWeight(){const data=db.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(-7);if(!data.length){$('#weightBox').innerHTML='<div class="empty"><span class="big">📈</span>Nenhuma pesagem registrada.</div>';return}const max=Math.max(...data.map(x=>x.weight),1),min=Math.min(...data.map(x=>x.weight),0);$('#weightBox').innerHTML=`<svg viewBox="0 0 300 120" style="height:145px;width:100%"><polyline fill="none" stroke="#237b31" stroke-width="4" points="${data.map((w,i)=>`${20+i*(260/Math.max(1,data.length-1))},${100-(w.weight-min)/Math.max(1,max-min)*72}`).join(' ')}"/>${data.map((w,i)=>`<circle cx="${20+i*(260/Math.max(1,data.length-1))}" cy="${100-(w.weight-min)/Math.max(1,max-min)*72}" r="4" fill="#237b31"/>`).join('')}</svg>`}
+function renderLots(){$('#lotCards').innerHTML=db.lots.map(l=>{const pct=Math.min(100,l.weight/l.target*100),ws=db.weights.filter(w=>w.lotId===l.id).sort((a,b)=>a.date.localeCompare(b.date));let gmd=0;if(ws.length>=2){const a=ws[0],b=ws[ws.length-1],days=Math.max(1,(new Date(b.date)-new Date(a.date))/86400000);gmd=(b.weight-a.weight)/days*1000}return`<div class="card"><div style="display:flex;justify-content:space-between;gap:10px"><div><h3>${l.name}</h3><span class="badge">${l.weight<30?'Creche':l.weight<70?'Crescimento':'Terminação'}</span><p class="sub">${l.qty-l.dead} cabeças • Entrada ${l.date}</p><p>Peso médio: <b>${num(l.weight)} kg</b><br>GMD: <b>${num(gmd)} g/dia</b></p></div><div style="width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#237b31 ${pct}%,#e5e9e5 0);font-weight:800">${num(pct)}%</div></div><div class="actions"><button class="btn soft small" onclick="openWeight('${l.id}')">Pesar</button><button class="btn soft small" onclick="death('${l.id}')">Morte</button><button class="btn gold small" onclick="sell('${l.id}')">Vender</button></div></div>`}).join('')||'<div class="empty"><span class="big">🐷</span>Nenhum lote cadastrado.</div>'}
+function renderWeights(){const rows=db.weights.slice().sort((a,b)=>b.date.localeCompare(a.date));$('#weightRows').innerHTML=rows.map(w=>{const l=db.lots.find(x=>x.id===w.lotId),prev=db.weights.filter(x=>x.lotId===w.lotId&&x.date<w.date).sort((a,b)=>b.date.localeCompare(a.date))[0];let gmd=0;if(prev){const days=Math.max(1,(new Date(w.date)-new Date(prev.date))/86400000);gmd=(w.weight-prev.weight)/days*1000}return`<tr><td>${w.date}</td><td>${l?.name||'-'}</td><td>${num(w.weight)} kg</td><td>${num(gmd)} g/dia</td><td><button class="btn danger small" onclick="removeWeight('${w.id}')">Excluir</button></td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Nenhuma pesagem.</td></tr>';drawWeightChart()}
+function drawWeightChart(){const c=$('#weightChart');if(!c)return;const ctx=c.getContext('2d'),data=db.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(-12),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#e5e9e5';for(let i=1;i<5;i++){ctx.beginPath();ctx.moveTo(50,i*h/5);ctx.lineTo(w-20,i*h/5);ctx.stroke()}if(!data.length)return;const max=Math.max(...data.map(x=>x.weight),1),min=Math.min(...data.map(x=>x.weight),0);ctx.strokeStyle='#237b31';ctx.lineWidth=4;ctx.beginPath();data.forEach((x,i)=>{const px=50+i*(w-80)/Math.max(1,data.length-1),py=h-35-(x.weight-min)/Math.max(1,max-min)*(h-75);i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.stroke();ctx.fillStyle='#237b31';data.forEach((x,i)=>{const px=50+i*(w-80)/Math.max(1,data.length-1),py=h-35-(x.weight-min)/Math.max(1,max-min)*(h-75);ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fill()})}
+function renderNutrition(){$('#recipeCards').innerHTML=db.recipes.map(r=>`<div class="card"><h3>${r.name}</h3><span class="badge">${r.phase||'Personalizada'}</span>${r.items.map(p=>`<p class="sub">${db.stock.find(x=>x.id===p.itemId)?.name||'Ingrediente'}: ${p.percent}%</p>`).join('')}</div>`).join('')||'<div class="empty"><span class="big">🥣</span>Nenhuma receita cadastrada.</div>';$('#ingredientRows').innerHTML=db.stock.filter(x=>x.category==='Ingrediente').map(x=>`<tr><td>${x.name}</td><td>${num(x.qty)} ${x.unit}</td><td>${money(x.cost)}</td><td>${num(x.min)}</td><td><button class="btn primary small" onclick="openMove('${x.id}')">Movimentar</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum ingrediente.</td></tr>';$('#produceRecipe').innerHTML='<option value="">Selecione a receita</option>'+db.recipes.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');$('#readyRows').innerHTML=db.stock.filter(x=>x.category==='Ração pronta').map(x=>`<tr><td>${x.name}</td><td>${num(x.qty)} kg</td><td>${money(x.cost)}</td><td>${money(x.qty*x.cost)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">Nenhuma ração pronta.</td></tr>'}
+function renderStock(){const rows=db.stock.filter(x=>filter==='Todos'||x.category===filter);$('#stockRows').innerHTML=rows.map(x=>`<tr><td>${x.name}</td><td>${x.category}</td><td style="${x.qty<=x.min?'color:#d83931':''}">${num(x.qty)} ${x.unit}</td><td>${num(x.min)}</td><td>${money(x.qty*x.cost)}</td><td><button class="btn primary small" onclick="openMove('${x.id}')">Movimentar</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Nenhum item.</td></tr>'}
+function renderFinance(){const t=totals();$('#fRevenue').textContent=money(t.r);$('#fExpense').textContent=money(t.d);$('#fProfit').textContent=money(t.p);$('#fMargin').textContent=t.r?num(t.p/t.r*100)+'%':'0%';$('#financeRows').innerHTML=db.finance.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${x.desc}</td><td>${x.category}</td><td style="color:${x.type==='receita'?'#1d7d32':'#d83931'}">${x.type==='receita'?'+':'-'} ${money(x.value)}</td><td><button class="btn danger small" onclick="deleteFinance('${x.id}')">Excluir</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum lançamento.</td></tr>'}
+function renderAgenda(){$('#agendaRows').innerHTML=db.agenda.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>`<tr><td>${x.date}</td><td>${x.type}</td><td>${x.desc}</td><td><span class="badge">${x.done?'Concluído':'Pendente'}</span></td><td><button class="btn soft small" onclick="toggleAgenda('${x.id}')">${x.done?'Reabrir':'Concluir'}</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhuma atividade.</td></tr>'}
+function renderReports(){const s=stats();$('#prodReport').innerHTML=`<p>Suínos ativos: <b>${s.active}</b></p><p>Peso médio: <b>${num(s.avg)} kg</b></p><p>GMD: <b>${num(s.gmd)} g/dia</b></p><p>Consumo de ração: <b>${num(s.feed)} kg</b></p><p>Conversão alimentar: <b>${num(s.fcr)} kg/kg</b></p><p>Custo por kg: <b>${money(s.cost)}</b></p>`;$('#finReport').innerHTML=`<p>Receitas: <b>${money(s.r)}</b></p><p>Despesas: <b>${money(s.d)}</b></p><p>Resultado: <b>${money(s.p)}</b></p><p>Previsão de venda: <b>${s.sale}</b></p>`}
+function renderChat(){$('#chat').innerHTML=db.chat.length?db.chat.map(x=>`<div class="msg ${x.role}">${x.text}</div>`).join(''):'<div class="msg bot">Olá! Pergunte sobre lotes, peso, estoque, ração, lucro ou previsão de venda.</div>'}
+function exportBackup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='backup-bl-suinos.json';a.click()}
+function exportCSV(){const rows=[['Data','Tipo','Categoria','Descrição','Valor'],...db.finance.map(x=>[x.date,x.type,x.category,x.desc,x.value])],csv='\ufeff'+rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(';')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='financeiro-bl-suinos.csv';a.click()}
+$('#importFile').onchange=async e=>{try{db=JSON.parse(await e.target.files[0].text());save();alert('Backup importado.')}catch{alert('Arquivo inválido.')}}
+
+// ===== BL SUÍNOS MANAGER v5: edição completa =====
+let lastDeletedV5=null,snackTimerV5=null;
+function escV5(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function notifyUndoV5(text){clearTimeout(snackTimerV5);$('#snackbarText').textContent=text;$('#snackbar').classList.add('show');snackTimerV5=setTimeout(()=>{$('#snackbar').classList.remove('show');lastDeletedV5=null},7000)}
+function removeRecordV5(collection,id,label='Registro'){const arr=db[collection],idx=arr.findIndex(x=>x.id===id);if(idx<0||!confirm(`Excluir ${label}?`))return;lastDeletedV5={collection,index:idx,item:structuredClone(arr[idx])};if(collection==='lots'){lastDeletedV5.weights=db.weights.filter(x=>x.lotId===id);db.weights=db.weights.filter(x=>x.lotId!==id)}arr.splice(idx,1);save();notifyUndoV5(label+' excluído.')}
+function undoDeleteV5(){if(!lastDeletedV5)return;db[lastDeletedV5.collection].splice(lastDeletedV5.index,0,lastDeletedV5.item);if(lastDeletedV5.weights)db.weights.push(...lastDeletedV5.weights);lastDeletedV5=null;$('#snackbar').classList.remove('show');save()}
+function duplicateRecordV5(collection,id){const item=db[collection].find(x=>x.id===id);if(!item)return;const c=structuredClone(item);c.id=uid();if(c.name)c.name+=' (cópia)';if(c.desc)c.desc+=' (cópia)';db[collection].push(c);save()}
+const saveV4=save;save=function(){localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(KEY+'-autosave',JSON.stringify({at:new Date().toISOString(),db}));render()}
+function openLot(id=''){const e=db.lots.find(x=>x.id===id);showModal(e?'Editar lote':'Novo lote',`<form id="lotForm"><input name="name" value="${escV5(e?.name||'')}" placeholder="Nome do lote" required><div class="form-row"><input name="qty" type="number" value="${e?.qty??''}" placeholder="Quantidade" required><input name="weight" type="number" step=".01" value="${e?.weight??''}" placeholder="Peso médio atual" required></div><div class="form-row"><input name="initialWeight" type="number" step=".01" value="${e?.initialWeight??''}" placeholder="Peso inicial"><input name="target" type="number" step=".01" value="${e?.target??110}" placeholder="Peso meta"></div><div class="form-row"><input name="dead" type="number" value="${e?.dead??0}" placeholder="Mortes"><input name="animalCost" type="number" step=".01" placeholder="Custo por animal (novo lote)"></div><input name="date" type="date" value="${e?.date||today()}" required><label><input type="checkbox" name="closed" ${e?.closed?'checked':''} style="width:auto"> Lote finalizado</label><button class="btn primary">${e?'Salvar alterações':'Salvar lote'}</button></form>`);$('#lotForm').onsubmit=ev=>{ev.preventDefault();const o=Object.fromEntries(new FormData(ev.target).entries()),data={name:o.name,qty:Number(o.qty),dead:Number(o.dead||0),initialWeight:Number(o.initialWeight||o.weight),weight:Number(o.weight),target:Number(o.target||110),date:o.date,closed:o.closed==='on'};if(e)Object.assign(e,data);else{const lot={id:uid(),...data,closed:false};db.lots.push(lot);db.weights.push({id:uid(),lotId:lot.id,weight:lot.weight,date:o.date});const cost=Number(o.animalCost||0);if(cost)db.finance.push({id:uid(),type:'despesa',category:'Compra de animais',desc:o.name,value:lot.qty*cost,date:o.date})}closeModal();save()}}
+function openWeight(lotId='',id=''){if(!db.lots.length){alert('Cadastre um lote primeiro.');return}const e=db.weights.find(x=>x.id===id);showModal(e?'Editar pesagem':'Nova pesagem',`<form id="weightForm"><select name="lotId">${db.lots.map(x=>`<option value="${x.id}" ${x.id===(e?.lotId||lotId)?'selected':''}>${escV5(x.name)}</option>`).join('')}</select><div class="form-row"><input name="weight" type="number" step=".01" value="${e?.weight??''}" placeholder="Peso médio (kg)" required><input name="date" type="date" value="${e?.date||today()}" required></div><button class="btn primary">${e?'Salvar alterações':'Salvar pesagem'}</button></form>`);$('#weightForm').onsubmit=ev=>{ev.preventDefault();const o=Object.fromEntries(new FormData(ev.target).entries()),data={lotId:o.lotId,weight:Number(o.weight),date:o.date};if(e)Object.assign(e,data);else db.weights.push({id:uid(),...data});const latest=db.weights.filter(x=>x.lotId===o.lotId).sort((a,b)=>b.date.localeCompare(a.date))[0],lot=db.lots.find(x=>x.id===o.lotId);if(lot&&latest)lot.weight=latest.weight;closeModal();save()}}
+function openIngredient(id=''){const e=db.stock.find(x=>x.id===id);showModal(e?'Editar ingrediente':'Novo ingrediente',`<form id="ingredientForm"><input name="name" value="${escV5(e?.name||'')}" placeholder="Nome" required><div class="form-row"><input name="qty" type="number" step=".01" value="${e?.qty??''}" placeholder="Quantidade" required><input name="min" type="number" step=".01" value="${e?.min??''}" placeholder="Mínimo"></div><div class="form-row"><input name="cost" type="number" step=".01" value="${e?.cost??''}" placeholder="Custo"><select name="unit">${['kg','litro','saco'].map(u=>`<option ${e?.unit===u?'selected':''}>${u}</option>`).join('')}</select></div><input name="supplier" value="${escV5(e?.supplier||'')}" placeholder="Fornecedor"><button class="btn primary">${e?'Salvar alterações':'Salvar ingrediente'}</button></form>`);$('#ingredientForm').onsubmit=ev=>{ev.preventDefault();const o=Object.fromEntries(new FormData(ev.target).entries()),data={name:o.name,category:'Ingrediente',qty:Number(o.qty),min:Number(o.min||0),cost:Number(o.cost||0),unit:o.unit,supplier:o.supplier};if(e)Object.assign(e,data);else db.stock.push({id:uid(),...data});closeModal();save()}}
+function openStock(id=''){const e=db.stock.find(x=>x.id===id);showModal(e?'Editar item':'Novo item de estoque',`<form id="stockForm"><input name="name" value="${escV5(e?.name||'')}" placeholder="Nome" required><select name="category">${['Medicamento','Vacina','Limpeza','Material','Outros'].map(c=>`<option ${e?.category===c?'selected':''}>${c}</option>`).join('')}</select><div class="form-row"><input name="qty" type="number" step=".01" value="${e?.qty??''}" placeholder="Quantidade" required><input name="min" type="number" step=".01" value="${e?.min??''}" placeholder="Mínimo"></div><div class="form-row"><input name="cost" type="number" step=".01" value="${e?.cost??''}" placeholder="Custo"><select name="unit">${['unidade','kg','litro','saco'].map(u=>`<option ${e?.unit===u?'selected':''}>${u}</option>`).join('')}</select></div><button class="btn primary">${e?'Salvar alterações':'Salvar item'}</button></form>`);$('#stockForm').onsubmit=ev=>{ev.preventDefault();const o=Object.fromEntries(new FormData(ev.target).entries()),data={name:o.name,category:o.category,qty:Number(o.qty),min:Number(o.min||0),cost:Number(o.cost||0),unit:o.unit};if(e)Object.assign(e,data);else db.stock.push({id:uid(),...data});closeModal();save()}}
+function openFinance(id=''){const e=db.finance.find(x=>x.id===id);showModal(e?'Editar lançamento':'Novo lançamento',`<form id="financeForm"><div class="form-row"><select name="type"><option value="despesa" ${e?.type==='despesa'?'selected':''}>Despesa</option><option value="receita" ${e?.type==='receita'?'selected':''}>Receita</option></select><input name="date" type="date" value="${e?.date||today()}"></div><input name="category" value="${escV5(e?.category||'')}" placeholder="Categoria" required><input name="desc" value="${escV5(e?.desc||'')}" placeholder="Descrição" required><input name="value" type="number" step=".01" value="${e?.value??''}" placeholder="Valor" required><button class="btn primary">${e?'Salvar alterações':'Salvar'}</button></form>`);$('#financeForm').onsubmit=ev=>{ev.preventDefault();const o=Object.fromEntries(new FormData(ev.target).entries()),data={...o,value:Number(o.value)};if(e)Object.assign(e,data);else db.finance.push({id:uid(),...data});closeModal();save()}}
+function openAgenda(id=''){const e=db.agenda.find(x=>x.id===id);showModal(e?'Editar atividade':'Nova atividade',`<form id="agendaForm"><div class="form-row"><select name="type">${['Vacina','Medicamento','Pesagem','Limpeza','Manejo','Pagamento'].map(t=>`<option ${e?.type===t?'selected':''}>${t}</option>`).join('')}</select><input name="date" type="date" value="${e?.date||today()}"></div><input name="desc" value="${escV5(e?.desc||'')}" placeholder="Descrição" required><label><input type="checkbox" name="done" ${e?.done?'checked':''} style="width:auto"> Concluída</label><button class="btn primary">${e?'Salvar alterações':'Salvar atividade'}</button></form>`);$('#agendaForm').onsubmit=ev=>{ev.preventDefault();const o=Object.fromEntries(new FormData(ev.target).entries()),data={type:o.type,date:o.date,desc:o.desc,done:o.done==='on'};if(e)Object.assign(e,data);else db.agenda.push({id:uid(),...data});closeModal();save()}}
+function openRecipe(id=''){const e=db.recipes.find(x=>x.id===id),ings=db.stock.filter(x=>x.category==='Ingrediente');if(!ings.length){alert('Cadastre ingredientes primeiro.');return}showModal(e?'Editar receita':'Nova receita',`<form id="recipeForm"><input name="name" value="${escV5(e?.name||'')}" placeholder="Nome" required><input name="phase" value="${escV5(e?.phase||'')}" placeholder="Fase"><div id="recipeLines"></div><button type="button" class="btn soft" onclick="addRecipeLineV5()">+ Ingrediente</button><div id="recipeTotal" class="sub">Total: 0%</div><button class="btn primary">${e?'Salvar alterações':'Salvar receita'}</button></form>`);(e?.items||[null]).forEach(i=>addRecipeLineV5(i));$('#recipeForm').onsubmit=ev=>{ev.preventDefault();const o=Object.fromEntries(new FormData(ev.target).entries()),items=$$('.recipe-line').map(r=>({itemId:r.querySelector('select').value,percent:Number(r.querySelector('input').value)})),total=items.reduce((s,x)=>s+x.percent,0);if(Math.abs(total-100)>.01){alert('A soma precisa ser 100%.');return}const data={name:o.name,phase:o.phase,items};if(e)Object.assign(e,data);else db.recipes.push({id:uid(),...data});closeModal();save()}}
+function addRecipeLineV5(item=null){const d=document.createElement('div');d.className='form-row recipe-line';d.innerHTML=`<select>${db.stock.filter(x=>x.category==='Ingrediente').map(x=>`<option value="${x.id}" ${item?.itemId===x.id?'selected':''}>${escV5(x.name)}</option>`).join('')}</select><input type="number" step=".01" value="${item?.percent??''}" placeholder="%" oninput="updateRecipeTotal()" required>`;$('#recipeLines').appendChild(d);updateRecipeTotal()}
+function renderLots(){const q=($('#lotSearch')?.value||'').toLowerCase();$('#lotCards').innerHTML=db.lots.filter(l=>!q||l.name.toLowerCase().includes(q)).map(l=>`<div class="card"><h3>${escV5(l.name)}</h3><span class="badge">${l.closed?'Finalizado':l.weight<30?'Creche':l.weight<70?'Crescimento':'Terminação'}</span><p>${l.qty-l.dead} cabeças • ${num(l.weight)} kg</p><div class="actions"><button class="btn primary small" onclick="openLot('${l.id}')">Editar</button><button class="btn soft small" onclick="openWeight('${l.id}')">Pesar</button><button class="btn soft small" onclick="death('${l.id}')">Morte</button><button class="btn gold small" onclick="sell('${l.id}')">Vender</button><button class="btn soft small" onclick="duplicateRecordV5('lots','${l.id}')">Duplicar</button><button class="btn danger small" onclick="removeRecordV5('lots','${l.id}','Lote')">Excluir</button></div></div>`).join('')||'<div class="empty">Nenhum lote encontrado.</div>'}
+function renderWeights(){const q=($('#weightSearch')?.value||'').toLowerCase(),f=$('#weightFrom')?.value||'',t=$('#weightTo')?.value||'';const rows=db.weights.filter(w=>{const l=db.lots.find(x=>x.id===w.lotId);return(!q||(l?.name||'').toLowerCase().includes(q))&&(!f||w.date>=f)&&(!t||w.date<=t)}).sort((a,b)=>b.date.localeCompare(a.date));$('#weightRows').innerHTML=rows.map(w=>{const l=db.lots.find(x=>x.id===w.lotId);return`<tr><td>${w.date}</td><td>${escV5(l?.name||'-')}</td><td>${num(w.weight)} kg</td><td>—</td><td><div class="icon-actions"><button class="btn primary small" onclick="openWeight('${w.lotId}','${w.id}')">Editar</button><button class="btn soft small" onclick="duplicateRecordV5('weights','${w.id}')">Duplicar</button><button class="btn danger small" onclick="removeRecordV5('weights','${w.id}','Pesagem')">Excluir</button></div></td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Nenhuma pesagem.</td></tr>';drawWeightChart()}
+function renderNutrition(){const q=($('#recipeSearch')?.value||'').toLowerCase();$('#recipeCards').innerHTML=db.recipes.filter(r=>!q||r.name.toLowerCase().includes(q)).map(r=>`<div class="card"><h3>${escV5(r.name)}</h3><span class="badge">${escV5(r.phase||'Personalizada')}</span>${r.items.map(p=>`<p class="sub">${escV5(db.stock.find(x=>x.id===p.itemId)?.name||'Ingrediente')}: ${p.percent}%</p>`).join('')}<div class="actions"><button class="btn primary small" onclick="openRecipe('${r.id}')">Editar</button><button class="btn soft small" onclick="duplicateRecordV5('recipes','${r.id}')">Duplicar</button><button class="btn danger small" onclick="removeRecordV5('recipes','${r.id}','Receita')">Excluir</button></div></div>`).join('')||'<div class="empty">Nenhuma receita.</div>';$('#ingredientRows').innerHTML=db.stock.filter(x=>x.category==='Ingrediente').map(x=>`<tr><td>${escV5(x.name)}</td><td>${num(x.qty)} ${x.unit}</td><td>${money(x.cost)}</td><td>${num(x.min)}</td><td><div class="icon-actions"><button class="btn primary small" onclick="openMove('${x.id}')">Movimentar</button><button class="btn soft small" onclick="openIngredient('${x.id}')">Editar</button><button class="btn danger small" onclick="removeRecordV5('stock','${x.id}','Ingrediente')">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="5">Nenhum ingrediente.</td></tr>';$('#produceRecipe').innerHTML='<option value="">Selecione a receita</option>'+db.recipes.map(r=>`<option value="${r.id}">${escV5(r.name)}</option>`).join('');$('#readyRows').innerHTML=db.stock.filter(x=>x.category==='Ração pronta').map(x=>`<tr><td>${escV5(x.name)}</td><td>${num(x.qty)} kg</td><td>${money(x.cost)}</td><td>${money(x.qty*x.cost)}</td></tr>`).join('')||'<tr><td colspan="4">Nenhuma ração pronta.</td></tr>'}
+function renderStock(){const q=($('#stockSearch')?.value||'').toLowerCase(),rows=db.stock.filter(x=>(filter==='Todos'||x.category===filter)&&(!q||x.name.toLowerCase().includes(q)));$('#stockRows').innerHTML=rows.map(x=>`<tr><td>${escV5(x.name)}</td><td>${x.category}</td><td>${num(x.qty)} ${x.unit}</td><td>${num(x.min)}</td><td>${money(x.qty*x.cost)}</td><td><div class="icon-actions"><button class="btn primary small" onclick="openMove('${x.id}')">Movimentar</button><button class="btn soft small" onclick="${x.category==='Ingrediente'?'openIngredient':'openStock'}('${x.id}')">Editar</button><button class="btn soft small" onclick="duplicateRecordV5('stock','${x.id}')">Duplicar</button><button class="btn danger small" onclick="removeRecordV5('stock','${x.id}','Item')">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="6">Nenhum item.</td></tr>'}
+function renderFinance(){const x=totals(),q=($('#financeSearch')?.value||'').toLowerCase(),f=$('#financeFrom')?.value||'',t=$('#financeTo')?.value||'';$('#fRevenue').textContent=money(x.r);$('#fExpense').textContent=money(x.d);$('#fProfit').textContent=money(x.p);$('#fMargin').textContent=x.r?num(x.p/x.r*100)+'%':'0%';$('#financeRows').innerHTML=db.finance.filter(i=>(!q||(i.desc+' '+i.category).toLowerCase().includes(q))&&(!f||i.date>=f)&&(!t||i.date<=t)).slice().reverse().map(i=>`<tr><td>${i.date}</td><td>${escV5(i.desc)}</td><td>${escV5(i.category)}</td><td>${i.type==='receita'?'+':'-'} ${money(i.value)}</td><td><div class="icon-actions"><button class="btn primary small" onclick="openFinance('${i.id}')">Editar</button><button class="btn soft small" onclick="duplicateRecordV5('finance','${i.id}')">Duplicar</button><button class="btn danger small" onclick="removeRecordV5('finance','${i.id}','Lançamento')">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="5">Nenhum lançamento.</td></tr>'}
+function renderAgenda(){const q=($('#agendaSearch')?.value||'').toLowerCase(),f=$('#agendaFrom')?.value||'',t=$('#agendaTo')?.value||'';$('#agendaRows').innerHTML=db.agenda.filter(i=>(!q||(i.desc+' '+i.type).toLowerCase().includes(q))&&(!f||i.date>=f)&&(!t||i.date<=t)).sort((a,b)=>a.date.localeCompare(b.date)).map(i=>`<tr><td>${i.date}</td><td>${i.type}</td><td>${escV5(i.desc)}</td><td><span class="badge">${i.done?'Concluído':'Pendente'}</span></td><td><div class="icon-actions"><button class="btn soft small" onclick="toggleAgenda('${i.id}')">${i.done?'Reabrir':'Concluir'}</button><button class="btn primary small" onclick="openAgenda('${i.id}')">Editar</button><button class="btn soft small" onclick="duplicateRecordV5('agenda','${i.id}')">Duplicar</button><button class="btn danger small" onclick="removeRecordV5('agenda','${i.id}','Atividade')">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="5">Nenhuma atividade.</td></tr>'}
+['lotSearch','weightSearch','weightFrom','weightTo','recipeSearch','stockSearch','financeSearch','financeFrom','financeTo','agendaSearch','agendaFrom','agendaTo'].forEach(id=>$('#'+id)?.addEventListener('input',()=>{if(id.startsWith('lot'))renderLots();else if(id.startsWith('weight'))renderWeights();else if(id.startsWith('recipe'))renderNutrition();else if(id.startsWith('stock'))renderStock();else if(id.startsWith('finance'))renderFinance();else renderAgenda()}));
+
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if(!db.configured)$('#onboarding').classList.add('open');
+render();
+</script>
+</body>
+</html>
